@@ -1,6 +1,13 @@
+:root{
+    --joyeux : rgb(126, 84, 255);
+    --hover : rgb(199, 114, 255);
+}
+body{
+    overflow-x: hidden;
+}
 .containerFond {
     width: 100vw;
-    height: 100vh;
+padding:5vh;
     /* Add your background pattern here */
     background: rgba(29, 31, 32, 0.904)
     radial-gradient(rgba(255, 255, 255, 0.712) 10%, transparent 1%);
@@ -8,9 +15,9 @@
     background-size: 11px 11px;
 }
 
-.form_main {
+.loginform {
     width: 50%;
-    height: 80%;
+ height: 90vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,7 +29,7 @@
     overflow: hidden;
 }
 
-.form_main::before {
+.loginform::before {
     position: absolute;
     content: "";
     width: 300px;
@@ -74,7 +81,7 @@
 
 .inputField:focus {
     outline: none;
-    border-bottom: 2px solid rgb(199, 114, 255);
+    border-bottom: 2px solid var(--joyeux);
 }
 
 .inputField::placeholder {
@@ -88,7 +95,7 @@
     position: relative;
     width: 100%;
     border: none;
-    background-color: rgb(162, 104, 255);
+    background-color: var(--joyeux);
     height: 80px;
     color: white;
     font-size: .8em;
@@ -102,18 +109,181 @@
     background-color: rgb(126, 84, 255);
 }
 
-.forgotLink {
+.forgotLink , .loginpage {
     z-index: 2;
-    font-size: .7em;
+    font-size: 1em;
     font-weight: 500;
-    color: rgb(44, 24, 128);
+    color: var(--hover);
     text-decoration: none;
     padding: 8px 15px;
     border-radius: 20px;
 }
+
 
 .error{
     color: red;
     font-size: 1.5em;
     font-weight: bolder;
 }
+.task {
+    position: relative;
+    color: #2e2e2f;
+    cursor: move;
+    width: 100%;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: rgb(99 99 99 / 42%) 0px 2px 15px 0px;
+    border: 3px dashed transparent;
+}
+
+.task:hover {
+    box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px;
+    border-color: rgba(162, 179, 207, 0.2) !important;
+}
+
+.task p {
+    font-size: 15px;
+    margin: 1.2rem 0;
+}
+
+.tag {
+    border-radius: 100px;
+    padding: 4px 13px;
+    font-size: 12px;
+    color: var(--joyeux);
+    background-color: #ffffff;
+    box-shadow: 0px 0px 4px grey;
+}
+
+.tags {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.options {
+    background: transparent;
+    border: 0;
+    color: #c4cad3;
+    font-size: 17px;
+}
+
+.options svg {
+    fill: #9fa4aa;
+    width: 20px;
+}
+
+.stats {
+    position: relative;
+    width: 100%;
+    color: #9fa4aa;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stats div {
+    margin-right: 1rem;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.stats svg {
+    margin-right: 5px;
+    height: 100%;
+    stroke: #9fa4aa;
+}
+
+.viewer span {
+    height: 30px;
+    width: 30px;
+    background-color: var(--joyeux);
+    margin-right: -10px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    padding: 2px;
+}
+
+.viewer span svg {
+    stroke: #fff;
+}
+
+
+
+
+/*================================FIL DE DISCUSSION ====================*/
+.filDiscussion{
+    z-index: 1;
+    width: 93%;
+    background-color: white;
+    height: 90%;
+    border-radius: 49px;
+    box-shadow: 0px 0px 3em black;
+}
+.postMessage {
+    width: 100%;
+    height: 70px;
+    border-radius: 10px;
+    background-color: #afafb4;
+    transform: translate(0px,0px);
+    box-shadow: 5px 5px #34343f;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.MsgInput {
+    font-size: 18px;
+    border-radius: 5px;
+    background-color: #afafb4;
+    border: none;
+    outline: none;
+    width: 96%;
+    height: 100%;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+
+}
+.MsgInput::placeholder{
+    color: var(--joyeux);
+}
+.SendSVG {
+    width: 30px;
+    height: 30px;
+    border-width: 50px;
+
+    background-size: 10px;
+    border-radius: 10px;
+
+}
+
+.SendSVG:hover {
+    background-color: #2b2b35;
+}
+
+.l {
+    position: absolute;
+    width: 1%;
+    height: 30px;
+    background-color: #2e2f38;
+    transform: translate(-20px,5px);
+}
+.bi-send{
+    color: var(--joyeux);
+    font-size: 2em;
+}
+
+/*================================ ===================*/
