@@ -1,25 +1,28 @@
-:root{
-    --joyeux : rgb(126, 84, 255);
-    --hover : rgb(199, 114, 255);
+:root {
+    --joyeux: rgb(126, 84, 255);
+    --hover: rgb(199, 114, 255);
 }
-body{
+
+body {
     overflow-x: hidden;
     margin: 0%;
 
-}.containerFond {
-     width: 100vw;
+}
 
-     position: relative;
-     height: 100vh;
-     /* Add your background pattern here */
-     background-color: #ffffff;
-     background-image: radial-gradient(rgba(12, 12, 12, 0.171) 2px, transparent 0);
-     background-size: 30px 30px;
-     background-position: -5px -5px;
- }
+.containerFond {
+    width: 100vw;
+
+    position: relative;
+    height: 100vh;
+    /* Add your background pattern here */
+    background-color: #ffffff;
+    background-image: radial-gradient(rgba(12, 12, 12, 0.171) 2px, transparent 0);
+    background-size: 30px 30px;
+    background-position: -5px -5px;
+}
 
 .containerFond::before {
-    content : '';
+    content: '';
     position: absolute;
     width: 100%;
     height: 7%;
@@ -33,7 +36,7 @@ body{
 
 .loginform {
     width: 50%;
- height: 90vh;
+    height: 90vh;
     position: absolute;
     bottom: 0%;
 
@@ -57,7 +60,7 @@ body{
     transform: rotate(45deg);
     left: -180px;
     bottom: 30px;
-    z-index: 1;
+
     border-radius: 30px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.082);
 }
@@ -128,7 +131,7 @@ body{
     background-color: rgb(126, 84, 255);
 }
 
-.forgotLink , .loginpage {
+.forgotLink, .loginpage {
     z-index: 2;
     font-size: 1em;
     font-weight: 500;
@@ -139,15 +142,16 @@ body{
 }
 
 
-.error{
+.error {
     color: red;
     font-size: 1.5em;
     font-weight: bolder;
 }
+
 .task {
     position: relative;
     color: #2e2e2f;
-    cursor: move;
+
     width: 100%;
     background-color: #fff;
     padding: 1rem;
@@ -247,7 +251,7 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    background-color:var(--joyeux);
+    background-color: var(--joyeux);
     padding: 30px 30px 30px 30px;
     box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
     position: relative;
@@ -263,7 +267,7 @@ body{
     align-items: center;
     justify-content: center;
     gap: 0.5em;
-   border-bottom: #fbfbff 2px solid;
+    border-bottom: #fbfbff 2px solid;
     border-radius: 4px;
     padding: 0.5em 1em;
 }
@@ -273,7 +277,8 @@ body{
     width: 2em;
     fill: white;
 }
-#loginfromsignup{
+
+#loginfromsignup {
     color: white;
     z-index: 2;
     font-size: 1em;
@@ -283,6 +288,7 @@ body{
     padding: 8px 15px;
     border-radius: 20px;
 }
+
 .input-field {
     background: none;
     border: none;
@@ -291,9 +297,11 @@ body{
     width: 100%;
     color: #d3d3d3;
 }
-.input-field::placeholder{
+
+.input-field::placeholder {
     color: white;
 }
+
 /*Text*/
 .title {
     margin-bottom: 1rem;
@@ -344,29 +352,32 @@ body{
 
 
 /*================================FIL DE DISCUSSION ====================*/
-.filDiscussion{
+.filDiscussion {
     position: absolute;
     bottom: 0%;
     right: 0%;
     width: 80%;
     background-color: white;
-    height: 90%;
+    height: 93%;
 }
-.messages,.postMessage{
+
+.messages, .postMessage {
     border-radius: 50px;
 }
-.messages{
+
+.messages {
     height: 90%;
     width: 100%;
     overflow-y: scroll;
 }
+
 .postMessage {
     width: 80%;
     height: 10%;
     position: fixed;
     border-radius: 10px;
     background-color: #e4e4ff;
-    transform: translate(0px,0px);
+    transform: translate(0px, 0px);
     box-shadow: 0px -10px 20px #d9d9d9;
     display: flex;
     flex-direction: row;
@@ -383,14 +394,16 @@ body{
     outline: none;
     width: 96%;
     height: 100%;
-    color: white;
+    color: var(--joyeux);
     padding: 10px;
-    font-weight: bold;
+
 
 }
-.msgInput::placeholder{
+
+.msgInput::placeholder {
     color: var(--joyeux);
 }
+
 .SendSVG {
     width: 30px;
     height: 30px;
@@ -410,9 +423,10 @@ body{
     width: 1%;
     height: 30px;
     background-color: #2e2f38;
-    transform: translate(-20px,5px);
+    transform: translate(-20px, 5px);
 }
-.bi-send , .refreshBtn{
+
+.bi-send, .refreshBtn {
     color: var(--joyeux);
     font-size: 2em;
     cursor: pointer;
@@ -421,12 +435,13 @@ body{
 /*================================ ===================*/
 
 
-@media only screen and (max-width: 1048px){
-    .loginform{
+@media only screen and (max-width: 1048px) {
+    .loginform {
         width: 100%;
         height: 100%;
     }
-    .containerFond{
+
+    .containerFond {
         padding: 0%;
     }
 
@@ -434,16 +449,32 @@ body{
         background-color: transparent;
 
     }
-    .filDiscussion{
+
+    .filDiscussion {
         position: relative;
         width: 100%;
         background-color: white;
         height: 100%;
         border-radius: 0;
     }
-.postMessage{
-    width: 100%;
-    position: fixed;
-    bottom: 0%;
-}
+
+    .postMessage {
+        width: 100%;
+        position: fixed;
+        bottom: 0%;
+    }
+
+    .loginform::before {
+        position: absolute;
+        content: "";
+        width: 215px;
+        height: 282px;
+        background-color: rgb(209, 193, 255);
+        transform: rotate(45deg);
+        left: -180px;
+        bottom: 30px;
+
+        border-radius: 30px;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.082);
+    }
 }
