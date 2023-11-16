@@ -4,15 +4,29 @@
 }
 body{
     overflow-x: hidden;
-}
-.containerFond {
-    width: 100vw;
-padding:5vh;
-    /* Add your background pattern here */
-    background: rgba(29, 31, 32, 0.904)
-    radial-gradient(rgba(255, 255, 255, 0.712) 10%, transparent 1%);
 
-    background-size: 11px 11px;
+}.containerFond {
+     width: 100vw;
+     padding: 5%;
+     position: relative;
+     height: 100vh;
+     /* Add your background pattern here */
+     background-color: #ffffff;
+     background-image: radial-gradient(rgba(12, 12, 12, 0.171) 2px, transparent 0);
+     background-size: 30px 30px;
+     background-position: -5px -5px;
+ }
+
+.containerFond::before {
+    content : '';
+    position: absolute;
+    width: 100%;
+    height: 7%;
+
+    background-color: white;
+    top: 0%;
+    left: 0%;
+    box-shadow:0px 2em 50px 2px #eaeaea;
 }
 
 .loginform {
@@ -45,7 +59,7 @@ padding:5vh;
 
 .heading {
     font-size: 2em;
-    color: #2e2e2e;
+    color: var(--joyeux);
     font-weight: 700;
     margin: 5px 0 10px 0;
     z-index: 2;
@@ -219,20 +233,132 @@ padding:5vh;
 }
 
 
+/*================================SIGNUPFORM ====================*/
+
+.card {
+    width: 50%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background-color:var(--joyeux);
+    padding: 30px 30px 30px 30px;
+    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
+    position: relative;
+    overflow: hidden;
+}
+
+/*Inputs*/
+.field {
+    margin-top: 0.5rem;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+   border-bottom: #fbfbff 2px solid;
+    border-radius: 4px;
+    padding: 0.5em 1em;
+}
+
+.input-icon {
+    height: 2em;
+    width: 2em;
+    fill: white;
+}
+#loginfromsignup{
+    color: white;
+    z-index: 2;
+    font-size: 1em;
+    font-weight: 500;
+
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+.input-field {
+    background: none;
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 100%;
+    color: #d3d3d3;
+}
+.input-field::placeholder{
+    color: white;
+}
+/*Text*/
+.title {
+    margin-bottom: 1rem;
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #f5f5f5;
+}
+
+/*Buttons*/
+.btn {
+    margin: 1rem;
+    width: 100%;
+    height: 7em;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: .8em;
+    text-transform: uppercase;
+    padding: 0.6em 1.2em;
+    background-color: white;
+    color: #5e6681;
+    box-shadow: 0 8px 24px 0 rgb(255 235 167 / 20%);
+    transition: all .3s ease-in-out;
+}
+
+.btn-link {
+    color: #f5f5f5;
+    display: block;
+    font-size: .75em;
+    transition: color .3s ease-out;
+}
+
+/*Hover & focus*/
+.field input:focus::placeholder {
+    opacity: 0;
+    transition: opacity .3s;
+}
+
+.btn:hover {
+    background-color: #5e6681;
+    color: #ffeba7;
+    box-shadow: 0 8px 24px 0 rgb(16 39 112 / 20%);
+}
+
+.btn-link:hover {
+    color: #ffeba7;
+}
 
 
 /*================================FIL DE DISCUSSION ====================*/
 .filDiscussion{
+    position: relative;
     z-index: 1;
     width: 93%;
     background-color: white;
     height: 90%;
     border-radius: 49px;
+
     box-shadow: 0px 0px 3em black;
 }
-.postMessage {
+.messages{
+    height: 100%;
     width: 100%;
+    overflow-y: scroll;
+}
+.postMessage {
+    width: 84%;
     height: 70px;
+    position: fixed;
+
     border-radius: 10px;
     background-color: #afafb4;
     transform: translate(0px,0px);
@@ -244,7 +370,7 @@ padding:5vh;
     padding: 10px;
 }
 
-.MsgInput {
+.msgInput {
     font-size: 18px;
     border-radius: 5px;
     background-color: #afafb4;
@@ -257,7 +383,7 @@ padding:5vh;
     font-weight: bold;
 
 }
-.MsgInput::placeholder{
+.msgInput::placeholder{
     color: var(--joyeux);
 }
 .SendSVG {
@@ -281,7 +407,7 @@ padding:5vh;
     background-color: #2e2f38;
     transform: translate(-20px,5px);
 }
-.bi-send{
+.bi-send , .refreshBtn{
     color: var(--joyeux);
     font-size: 2em;
 }
