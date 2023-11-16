@@ -11,8 +11,7 @@ addStyleRule('.centered', `display :flex ; justify-content : center ; align-item
 
 
 //=======================================================================
-let token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDAxNzM3MzcsImV4cCI6MTcwMDE3NzMzNywicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoibWV5In0.EAsDlF5soWVUwvDGAZzcPgquCRdz6d75UfYQbDk2wwiPu0G7n2H1pkGJFLh4B9C4BhepOC8k8Ziw7m5I6uO4MQGxCKLwnUR83V45qPjImICEIRypUmgza9f5R2XvGwO8506IARAyoWCljFw9PQCdr_cNcZn2ftmqxCm6QJ-ymfsldyhZsGlgRHKrgaWE01HVWmRKJ3BlL46AaSmv-7O4jKw0cUSaqZfdRpgZwSwIkJ9tIMFPksp1y6c6EetZkKaueZ-Mp22TcnJP2GsWC7OBOMB6tdIezJi5qTKiM-xiT_HH_v8T-pi4gaes2fTI7qpAva1PLErMC0BapfSz7667lg'
-let error = ""
+let token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDAxNzczODQsImV4cCI6MTcwMDE4MDk4NCwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoibWV5In0.N2sDE-4KHShA7Y6fqHCkyqFciwm35auN1PBijQwa1YsEQJOg-fMfKsZKXb7jLcucp69rnxleNDNLitJn9_hPnSNLwGmuMvAHdvScOoHa4CWprzmHMRNRMvEX6ox9JbfHVVHF86SUAkFjk-krWMBGc1-IySIRxbTY5KtNqf1_qdngoyV1wUlE8CHADWpomseF6qd6fhtc4ZViUzVxKy5wllzcFYWkwXaS4Y4CYMbj8RyNrKd8RuMr8aiYJoBKWz2KCenzDSmW7TxkL8JZgxolVvDNAyv7ZHVBmAo9EqcVjVXCmzSpYmaYCKRtJfY0Gr55kTOLC-4u84LsgwTOCzi_mA'
 let error2 = ""
 //checker les cookies du navigateur et le rempalcer
 //formulaire acceptation coockie
@@ -287,40 +286,47 @@ function renderMessage(listeMessage) {
         addMessage(message)
         let id = message.id
 
-        if (message.author.username === nom){
-                document.querySelector(`.option${id}`).innerHTML+= `
+        if (message.author.username === nom) {
+            document.querySelector(`.option${id}`).innerHTML += `
                <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
                 <div class="crayon" id=${id}> <i class="bi bi-pencil"></i></div>
                 <div class="reaction" id=${id}><i class="bi bi-chat-square-heart"></i></div>
                 <div class="repondre" id=${id}>    <i class="bi bi-chat"></i></div>`
 
-            let poubelle = document.querySelector('.poubelle');
-            let crayon = document.querySelector('.crayon');
-            let reaction = document.querySelector('.reaction');
-            let repondre = document.querySelector('.repondre');
-
-            if (poubelle) {
-                poubelle.addEventListener('click', () => {
-                    supprimerMessage(id)
-                });
-            } else if (crayon) {
-                crayon.addEventListener('click', () => {
-                    modifierMessage(id)
-                });
-            } else if (reaction) {
-                reaction.addEventListener('click', () => {
-                    reactionMessage(id)
-                });
-            } else if (repondre) {
-                repondre.addEventListener('click', () => {
-                    repondreMessaage(id)
-                });
-            }
-
         }
 
 
     })
+    let poubelles = document.querySelectorAll('.poubelle');
+    let crayons = document.querySelectorAll('.crayon');
+    let reactions = document.querySelectorAll('.reaction');
+    let repondres = document.querySelectorAll('.repondre');
+
+    poubelles.forEach((poubelle) => {
+        poubelle.addEventListener('click', () => {
+            supprimerMessage(poubelle.id)
+        });
+    });
+
+    crayons.forEach((crayon) => {
+        crayon.addEventListener('click', () => {
+
+            modifierMessage(crayon.id);
+        });
+    });
+
+    reactions.forEach((reaction) => {
+        reaction.addEventListener('click', () => {
+            reactionMessage(reaction.id)
+        });
+    });
+
+    repondres.forEach((repondre) => {
+        repondre.addEventListener('click', () => {
+            repondreMessaage(repondre.id)
+        });
+    });
+
 }
 
 async function getMessages() {
@@ -357,25 +363,35 @@ function addMessage(message) {
     const zoneMessage = document.querySelector('.messages')
     let id = message.id
     zoneMessage.innerHTML += `                    
-                              <div class="task " draggable="true">
+                              <div class="task ">
                                 <div class="tags">
                                   <span class="tag">${identifier(message['author']['username'])}</span>
                                   <button class="options option${id} d-flex flex-row">
                                  
                                     </button>
                                 </div>
-                                   <p class="messaageContenu${id}">${message.content}</p>
+                                <div >
+                                <p class='messaageContenu${id}'> ${message.content}</p>
+                                </div>
+                                
                                 <div class="stats">
                                   <div class="donneeSUp">
+                                  
                                     <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linecap="round" stroke-width="2" d="M12 8V12L15 15"></path> <circle stroke-width="2" r="9" cy="12" cx="12"></circle> </g></svg>${message['createdAt'].slice(0, 10)}</div>
                                       <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M16 10H16.01M12 10H12.01M8 10H8.01M3 10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706 21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"></path> </g></svg>18</div>
                                       <div><svg fill="#000000" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-2.5 0 32 32"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path fill="#000000" d="M0 10.284l0.505 0.36c0.089 0.064 0.92 0.621 2.604 0.621 0.27 0 0.55-0.015 0.836-0.044 3.752 4.346 6.411 7.472 7.060 8.299-1.227 2.735-1.42 5.808-0.537 8.686l0.256 0.834 7.63-7.631 8.309 8.309 0.742-0.742-8.309-8.309 7.631-7.631-0.834-0.255c-2.829-0.868-5.986-0.672-8.686 0.537-0.825-0.648-3.942-3.3-8.28-7.044 0.11-0.669 0.23-2.183-0.575-3.441l-0.352-0.549-8.001 8.001zM1.729 10.039l6.032-6.033c0.385 1.122 0.090 2.319 0.086 2.334l-0.080 0.314 0.245 0.214c7.409 6.398 8.631 7.39 8.992 7.546l-0.002 0.006 0.195 0.058 0.185-0.087c2.257-1.079 4.903-1.378 7.343-0.836l-13.482 13.481c-0.55-2.47-0.262-5.045 0.837-7.342l0.104-0.218-0.098-0.221-0.031 0.013c-0.322-0.632-1.831-2.38-7.498-8.944l-0.185-0.215-0.282 0.038c-0.338 0.045-0.668 0.069-0.981 0.069-0.595 0-1.053-0.083-1.38-0.176z"> </path> </g></svg>7</div>
                                     </div>
-                                  
+                                  <div class="reaction${id}"></div>
                                   </div>
                     `
 
 
+}
+function getRandomColor() {
+    let red = Math.floor(Math.random() * 256);
+    let green = Math.floor(Math.random() * 256);
+    let blue = Math.floor(Math.random() * 256);
+ return `rgb(${red}, ${green}, ${blue})`;
 }
 
 // -----------------------------------------
@@ -417,7 +433,7 @@ function sendMessage(messageAEnvoyer) {
 // -----------------------------------------
 function supprimerMessage(id) {
 
-    const param =
+    const supprimerParam =
         {
             method: 'DELETE',
             headers: {
@@ -426,35 +442,56 @@ function supprimerMessage(id) {
             },
 
         }
-        fetch(`${baseUrl}api/messages/delete/id`)
-
-
+    fetch(`${baseUrl}api/messages/delete/${id}`,supprimerParam).then(response=>response.json()).then(data=>{
+        run()
+    })
 }
 
 function modifierMessage(id) {
+    let message = document.querySelector(`.messaageContenu${id}`)
+    let messageInput = document.createElement('input')
+    messageInput.value = message.innerHTML
+    messageInput.type = 'text'
+    message.replaceWith(messageInput)
 
-    const param =
-        {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                'content': 'la fleur de sakaura'
-            })
+    messageInput.addEventListener('keypress',(e)=>{
+        if(e.key === 'Enter'){
+            console.log('entrer')
+            const param =
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        'content': `${messageInput.value}  (Modified)`
+                    })
+                }
+            console.log(id)
+            fetch(`${baseUrl}api/messages/${id}/edit`, param)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                     message = document.createElement('p')
+                    message.innerHTML = messageInput.value
+                    message.classList.add(`messaageContenu${id}`)
+                    messageInput.replaceWith(message)
+                    run()
+
+                })
+
+
         }
-    console.log(id)
-    fetch(`${baseUrl}api/messages/${id}/edit`, param)
-        .then(response => response.json())
-        .then(dataa => {
-            console.log(data)
-        })
+    })
+
 
 
 }
 
 function reactionMessage(id) {
+let reaction = document.querySelector(`.reaction${id}}`)
+
 }
 
 function repondreMessaage(id) {
