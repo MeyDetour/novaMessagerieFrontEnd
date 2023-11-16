@@ -191,11 +191,14 @@ body {
     border: 0;
     color: #c4cad3;
     font-size: 17px;
+    gap: 10px;
 }
 
-.options svg {
-    fill: #9fa4aa;
-    width: 20px;
+.options>div{
+    color: #9fa4aa;
+    stroke: #9fa4aa;
+    width: 22px;
+
 }
 
 .stats {
@@ -295,6 +298,7 @@ body {
     outline: none;
     height: 100%;
     width: 100%;
+    font-size: 1.5em;
     color: #d3d3d3;
 }
 
@@ -431,7 +435,9 @@ body {
     font-size: 2em;
     cursor: pointer;
 }
-
+.bi-trash{
+    color:  #9fa4aa
+}
 /*================================ ===================*/
 
 
