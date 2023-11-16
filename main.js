@@ -118,11 +118,11 @@ function renderSignup() {
     nomsignup = document.querySelector('#usernamesignup')
     mdpsignup = document.querySelector('#mdpsignup')
 
-    submitsignup.addEventListener('click',()=>{
-        register(nomsignup.value,mdpsignup.value)
+    submitsignup.addEventListener('click', () => {
+        register(nomsignup.value, mdpsignup.value)
     })
 
-    btnlogin.addEventListener('click',()=>{
+    btnlogin.addEventListener('click', () => {
         renderForm()
     })
 
@@ -130,24 +130,23 @@ function renderSignup() {
 }
 
 async function register(name, mdpasse) {
-fetch(`${baseUrl}register`,profilParametreFetch(name,mdpasse))
-    .then(response =>response.json())
-    .then(data =>{
-        console.log(name,mdpasse)
-        console.log(data)
-        if (data === "username already taken"){
-            error2.textContent = 'Pseudo déja pris ! Veuillez réessayer merci :)'
-            setTimeout(() => {
-                error2.textContent = ""
-            }, 2000)
-            nomsignup.value = ""
-            mdpsignup.value = ""
-        }
-        else{
-            getToken(name,mdpasse)
+    fetch(`${baseUrl}register`, profilParametreFetch(name, mdpasse))
+        .then(response => response.json())
+        .then(data => {
+            console.log(name, mdpasse)
+            console.log(data)
+            if (data === "username already taken") {
+                error2.textContent = 'Pseudo déja pris ! Veuillez réessayer merci :)'
+                setTimeout(() => {
+                    error2.textContent = ""
+                }, 2000)
+                nomsignup.value = ""
+                mdpsignup.value = ""
+            } else {
+                getToken(name, mdpasse)
 
-        }
-    })
+            }
+        })
 }
 
 function profilParametreFetch(name, mdpasse) {
@@ -264,8 +263,9 @@ function addMessage(message) {
                                 <div class="tags">
                                   <span class="tag">${identifier(message['author']['username'])}</span>
                                   <button class="options">
-                                    <svg xml:space="preserve" viewBox="0 0 41.915 41.916" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1" fill="#000000"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M11.214,20.956c0,3.091-2.509,5.589-5.607,5.589C2.51,26.544,0,24.046,0,20.956c0-3.082,2.511-5.585,5.607-5.585 C8.705,15.371,11.214,17.874,11.214,20.956z"></path> <path d="M26.564,20.956c0,3.091-2.509,5.589-5.606,5.589c-3.097,0-5.607-2.498-5.607-5.589c0-3.082,2.511-5.585,5.607-5.585 C24.056,15.371,26.564,17.874,26.564,20.956z"></path> <path d="M41.915,20.956c0,3.091-2.509,5.589-5.607,5.589c-3.097,0-5.606-2.498-5.606-5.589c0-3.082,2.511-5.585,5.606-5.585 C39.406,15.371,41.915,17.874,41.915,20.956z"></path> </g> </g> </g></svg>
-                                  </button>
+                                    <button type="button" class="btn btn-secondary" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Bottom popover">
+                                      Popover on bottom
+                                    </button>  </button>
                                 </div>
                                 <p>${message['content']}</p>
                                 <div class="stats">
