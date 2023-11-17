@@ -11,14 +11,14 @@ addStyleRule('.centered', `display :flex ; justify-content : center ; align-item
 
 
 //=======================================================================
-let token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDAxNzczODQsImV4cCI6MTcwMDE4MDk4NCwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoibWV5In0.N2sDE-4KHShA7Y6fqHCkyqFciwm35auN1PBijQwa1YsEQJOg-fMfKsZKXb7jLcucp69rnxleNDNLitJn9_hPnSNLwGmuMvAHdvScOoHa4CWprzmHMRNRMvEX6ox9JbfHVVHF86SUAkFjk-krWMBGc1-IySIRxbTY5KtNqf1_qdngoyV1wUlE8CHADWpomseF6qd6fhtc4ZViUzVxKy5wllzcFYWkwXaS4Y4CYMbj8RyNrKd8RuMr8aiYJoBKWz2KCenzDSmW7TxkL8JZgxolVvDNAyv7ZHVBmAo9EqcVjVXCmzSpYmaYCKRtJfY0Gr55kTOLC-4u84LsgwTOCzi_mA'
+let token = null
 let error2 = ""
 //checker les cookies du navigateur et le rempalcer
 //formulaire acceptation coockie
 let content = document.querySelector('.containerFond')
 const baseUrl = "https://b1messenger.imatrythis.tk/"
-let nom = "mey"
-let mdp = "meymey"
+let nom = " "
+let mdp = " "
 
 nomsignup = ""
 mdpsignup = ""
@@ -53,6 +53,9 @@ function isNotEmpty(message) {
     // return true si elle n'est pas vide
 
     return message.trim() !== ''
+}
+function isEmptyList(liste){
+    return liste.length === 0
 }
 
 // -----------------------------------------
@@ -257,10 +260,13 @@ function renderMessage(listeMessage) {
     console.log(isNotEmpty(messageAEnvoyer.value))
 
     messageAEnvoyer.addEventListener('keypress', (e) => {
-
+        if (e.key === "Enter" && e.shiftKey){
+            console.log('maj')
+            messageAEnvoyer.value += '\'
+        }
+            console.log(e)
         if (e.key === 'Enter') {
             if (isNotEmpty(messageAEnvoyer.value)) {
-
                 sendMessage(messageAEnvoyer)
             }
             run()
@@ -286,17 +292,31 @@ function renderMessage(listeMessage) {
         addMessage(message)
         let id = message.id
 
-        if (message.author.username === nom) {
+
+        if (message.author.username === nom.value) {
             document.querySelector(`.option${id}`).innerHTML += `
                <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
                 <div class="crayon" id=${id}> <i class="bi bi-pencil"></i></div>
-                <div class="reaction" id=${id}><i class="bi bi-chat-square-heart"></i></div>
-                <div class="repondre" id=${id}>    <i class="bi bi-chat"></i></div>`
+             
+              `
 
+        }
+        else{
+            document.querySelector(`.option${id}`).innerHTML += `
+   <div class="reaction" id=${id}><i class="bi bi-chat-square-heart"></i></div>
+            <div class="repondre" id=${id}>    <i class="bi bi-chat"></i></div>`
+
+            if (!isEmptyList(message.responses)){
+                let reponse = document.querySelector(`.reponses${id}}`)
+
+                reponse.innerHTML = `${message.responses.lenght} Réponses...`
+                reponse.addEventListener('click',()=>{
+                    console.log('click reponse')
+                })
         }
 
 
-    })
+    }})
     let poubelles = document.querySelectorAll('.poubelle');
     let crayons = document.querySelectorAll('.crayon');
     let reactions = document.querySelectorAll('.reaction');
@@ -310,7 +330,7 @@ function renderMessage(listeMessage) {
 
     crayons.forEach((crayon) => {
         crayon.addEventListener('click', () => {
-
+            console.log(crayon.id)
             modifierMessage(crayon.id);
         });
     });
@@ -323,6 +343,7 @@ function renderMessage(listeMessage) {
 
     repondres.forEach((repondre) => {
         repondre.addEventListener('click', () => {
+            console.log(repondre)
             repondreMessaage(repondre.id)
         });
     });
@@ -373,7 +394,7 @@ function addMessage(message) {
                                 <div >
                                 <p class='messaageContenu${id}'> ${message.content}</p>
                                 </div>
-                                
+                              
                                 <div class="stats">
                                   <div class="donneeSUp">
                                   
@@ -381,6 +402,7 @@ function addMessage(message) {
                                       <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M16 10H16.01M12 10H12.01M8 10H8.01M3 10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706 21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"></path> </g></svg>18</div>
                                       <div><svg fill="#000000" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-2.5 0 32 32"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path fill="#000000" d="M0 10.284l0.505 0.36c0.089 0.064 0.92 0.621 2.604 0.621 0.27 0 0.55-0.015 0.836-0.044 3.752 4.346 6.411 7.472 7.060 8.299-1.227 2.735-1.42 5.808-0.537 8.686l0.256 0.834 7.63-7.631 8.309 8.309 0.742-0.742-8.309-8.309 7.631-7.631-0.834-0.255c-2.829-0.868-5.986-0.672-8.686 0.537-0.825-0.648-3.942-3.3-8.28-7.044 0.11-0.669 0.23-2.183-0.575-3.441l-0.352-0.549-8.001 8.001zM1.729 10.039l6.032-6.033c0.385 1.122 0.090 2.319 0.086 2.334l-0.080 0.314 0.245 0.214c7.409 6.398 8.631 7.39 8.992 7.546l-0.002 0.006 0.195 0.058 0.185-0.087c2.257-1.079 4.903-1.378 7.343-0.836l-13.482 13.481c-0.55-2.47-0.262-5.045 0.837-7.342l0.104-0.218-0.098-0.221-0.031 0.013c-0.322-0.632-1.831-2.38-7.498-8.944l-0.185-0.215-0.282 0.038c-0.338 0.045-0.668 0.069-0.981 0.069-0.595 0-1.053-0.083-1.38-0.176z"> </path> </g></svg>7</div>
                                     </div>
+                                    <div class="reponses${id}"></div>
                                   <div class="reaction${id}"></div>
                                   </div>
                     `
@@ -495,4 +517,5 @@ let reaction = document.querySelector(`.reaction${id}}`)
 }
 
 function repondreMessaage(id) {
+
 }
