@@ -1,14 +1,27 @@
 :root {
     --joyeux: rgb(126, 84, 255);
     --hover: rgb(199, 114, 255);
+    --absent : #fafee4;
+
+
+    --borderRadius: 10px;
+    --spacer: 1rem;
+    --primary: #406ff3;
+    --text: #6a778e;
+    --linkHeight: calc(var(--spacer) * 3.5);
+    --timing: 250ms;
+    --transition: var(--timing) ease all;
 }
 
 body {
     overflow-x: hidden;
     margin: 0%;
 
-}
 
+}
+::selection{
+    background-color: var(--hover);
+}
 .containerFond {
     width: 100vw;
 
@@ -21,7 +34,7 @@ body {
     background-position: -5px -5px;
 }
 
-.containerFond::before {
+.containerFddddond::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -31,8 +44,9 @@ body {
     background-color: white;
     top: 0%;
     left: 0%;
-    box-shadow: 0px 2em 15px 2px #eaeaea6b;
+    border-bottom: #80808026 2px solid;
 }
+
 
 .loginform {
     width: 50%;
@@ -151,10 +165,9 @@ body {
 .task {
     position: relative;
     color: #2e2e2f;
-
     width: 100%;
     background-color: #fff;
-    padding: 1rem;
+    padding: 1rem 2rem;
     border-radius: 8px;
     box-shadow: rgb(99 99 99 / 42%) 0px 2px 15px 0px;
     border: 3px dashed transparent;
@@ -194,7 +207,7 @@ body {
     gap: 10px;
 }
 
-.options>div{
+.options > div {
     color: #9fa4aa;
     stroke: #9fa4aa;
     width: 22px;
@@ -360,7 +373,7 @@ body {
     position: absolute;
     bottom: 0%;
     right: 0%;
-    width: 80%;
+    width: 86%;
     background-color: white;
     height: 93%;
 }
@@ -376,11 +389,11 @@ body {
 }
 
 .postMessage {
-    width: 80%;
+    width: 86%;
     height: 10%;
     position: fixed;
     border-radius: 10px;
-    background-color: #e4e4ff;
+    background-color: var(--absent);
     transform: translate(0px, 0px);
     box-shadow: 0px -10px 20px #d9d9d9;
     display: flex;
@@ -393,7 +406,7 @@ body {
 .msgInput {
     font-size: 18px;
     border-radius: 5px;
-    background-color: #e4e4ff;
+    background-color: var(--absent);
     border: none;
     outline: none;
     width: 96%;
@@ -435,11 +448,28 @@ body {
     font-size: 2em;
     cursor: pointer;
 }
-.bi-trash{
-    color:  #9fa4aa
-}
-/*================================ ===================*/
 
+.bi-trash {
+    color: #9fa4aa
+}
+
+.textareamodify, .textareaMessage {
+    width: 94%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.textareaMessage {
+    border: 0;
+    outline: none;
+}
+
+.textareamodify {
+    border: var(--joyeux) 2px solid;
+
+}
+
+/*================================ ===================*/
 
 @media only screen and (max-width: 1048px) {
     .loginform {

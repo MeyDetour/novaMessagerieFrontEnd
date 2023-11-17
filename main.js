@@ -31,6 +31,7 @@ function run() {
     } else {
         getMessages().then(response => {
             renderMessage(response)
+            renderInterface()
             scrollY()
         })
     }
@@ -54,7 +55,8 @@ function isNotEmpty(message) {
 
     return message.trim() !== ''
 }
-function isEmptyList(liste){
+
+function isEmptyList(liste) {
     return liste.length === 0
 }
 
@@ -94,6 +96,13 @@ function renderForm() {
     const forgotmdp = document.querySelector('.forgotmdp')
     nom = document.querySelector('#username')
     mdp = document.querySelector('#password')
+nom.focus()
+    nom.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          mdp.focus()
+        }
+
+    })
 
     mdp.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -226,6 +235,7 @@ async function getToken(name, mdpasse) {
                 }, 2000)
                 nom.value = ""
                 mdp.value = ""
+                nom.focus()
             } else {
                 console.log(token)
                 token = data.token
@@ -236,6 +246,15 @@ async function getToken(name, mdpasse) {
 }
 
 // -----------------------------------------
+// -------------Affichage  INTERFACE
+// -----------------------------------------
+function renderInterface(){
+const template = `
+   
+`
+    content.innerHTML+= template
+}
+// -----------------------------------------
 // -------------Affichage messaage
 // -----------------------------------------
 function renderMessage(listeMessage) {
@@ -245,8 +264,8 @@ function renderMessage(listeMessage) {
 
         </div>
         <div class="postMessage">
-            <input title="Write Message" tabindex="i" pattern="\\d+" placeholder="Message.." class="msgInput"
-                   type="text">
+          <textarea title="Write Message" tabindex="i" placeholder="Message.." class="msgInput"></textarea>
+
             <i class="bi bi-send"></i>
             <i class="bi bi-arrow-clockwise refreshBtn"></i>
         </div>
@@ -256,97 +275,29 @@ function renderMessage(listeMessage) {
     let bouttonSend = document.querySelector('.bi-send')
     let boutonRefresh = document.querySelector('.refreshBtn')
     const messageAEnvoyer = document.querySelector('.msgInput')
+
     messageAEnvoyer.focus()
-    console.log(isNotEmpty(messageAEnvoyer.value))
 
-    messageAEnvoyer.addEventListener('keypress', (e) => {
-        if (e.key === "Enter" && e.shiftKey){
-            console.log('maj')
-            messageAEnvoyer.value += '\'
-        }
-            console.log(e)
-        if (e.key === 'Enter') {
-            if (isNotEmpty(messageAEnvoyer.value)) {
-                sendMessage(messageAEnvoyer)
-            }
-            run()
-        }
 
+    messageAEnvoyer.addEventListener('keydown', (e) => {
+        modifierInnerMessage(e, messageAEnvoyer, 'a') //envoie le message
     })
-
     bouttonSend.addEventListener('click', () => {
+        console.log(messageAEnvoyer.value)
         if (isNotEmpty(messageAEnvoyer.value)) {
-            sendMessage(messageAEnvoyer)
+            modifierInnerMessage('null', messageAEnvoyer, 'a') //envoie le message
         }
-        run()
-
     })
-
-
     boutonRefresh.addEventListener('click', () => {
         run()
     })
-
-
     listeMessage.forEach((message) => {
         addMessage(message)
-        let id = message.id
+        addActions(message)
+    })
+    addActionEvent()
 
 
-        if (message.author.username === nom.value) {
-            document.querySelector(`.option${id}`).innerHTML += `
-               <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
-                <div class="crayon" id=${id}> <i class="bi bi-pencil"></i></div>
-             
-              `
-
-        }
-        else{
-            document.querySelector(`.option${id}`).innerHTML += `
-   <div class="reaction" id=${id}><i class="bi bi-chat-square-heart"></i></div>
-            <div class="repondre" id=${id}>    <i class="bi bi-chat"></i></div>`
-
-            if (!isEmptyList(message.responses)){
-                let reponse = document.querySelector(`.reponses${id}}`)
-
-                reponse.innerHTML = `${message.responses.lenght} Réponses...`
-                reponse.addEventListener('click',()=>{
-                    console.log('click reponse')
-                })
-        }
-
-
-    }})
-    let poubelles = document.querySelectorAll('.poubelle');
-    let crayons = document.querySelectorAll('.crayon');
-    let reactions = document.querySelectorAll('.reaction');
-    let repondres = document.querySelectorAll('.repondre');
-
-    poubelles.forEach((poubelle) => {
-        poubelle.addEventListener('click', () => {
-            supprimerMessage(poubelle.id)
-        });
-    });
-
-    crayons.forEach((crayon) => {
-        crayon.addEventListener('click', () => {
-            console.log(crayon.id)
-            modifierMessage(crayon.id);
-        });
-    });
-
-    reactions.forEach((reaction) => {
-        reaction.addEventListener('click', () => {
-            reactionMessage(reaction.id)
-        });
-    });
-
-    repondres.forEach((repondre) => {
-        repondre.addEventListener('click', () => {
-            console.log(repondre)
-            repondreMessaage(repondre.id)
-        });
-    });
 
 }
 
@@ -383,6 +334,7 @@ function identifier(usernom) {
 function addMessage(message) {
     const zoneMessage = document.querySelector('.messages')
     let id = message.id
+    console.log(message.reactions,message.responses)
     zoneMessage.innerHTML += `                    
                               <div class="task ">
                                 <div class="tags">
@@ -392,36 +344,36 @@ function addMessage(message) {
                                     </button>
                                 </div>
                                 <div >
-                                <p class='messaageContenu${id}'> ${message.content}</p>
+                               <textarea readonly class='textareaMessage messaageContenu${id}'>${message.content}</textarea>
+
                                 </div>
                               
                                 <div class="stats">
                                   <div class="donneeSUp">
                                   
                                     <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linecap="round" stroke-width="2" d="M12 8V12L15 15"></path> <circle stroke-width="2" r="9" cy="12" cx="12"></circle> </g></svg>${message['createdAt'].slice(0, 10)}</div>
-                                      <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M16 10H16.01M12 10H12.01M8 10H8.01M3 10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706 21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"></path> </g></svg>18</div>
-                                      <div><svg fill="#000000" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-2.5 0 32 32"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path fill="#000000" d="M0 10.284l0.505 0.36c0.089 0.064 0.92 0.621 2.604 0.621 0.27 0 0.55-0.015 0.836-0.044 3.752 4.346 6.411 7.472 7.060 8.299-1.227 2.735-1.42 5.808-0.537 8.686l0.256 0.834 7.63-7.631 8.309 8.309 0.742-0.742-8.309-8.309 7.631-7.631-0.834-0.255c-2.829-0.868-5.986-0.672-8.686 0.537-0.825-0.648-3.942-3.3-8.28-7.044 0.11-0.669 0.23-2.183-0.575-3.441l-0.352-0.549-8.001 8.001zM1.729 10.039l6.032-6.033c0.385 1.122 0.090 2.319 0.086 2.334l-0.080 0.314 0.245 0.214c7.409 6.398 8.631 7.39 8.992 7.546l-0.002 0.006 0.195 0.058 0.185-0.087c2.257-1.079 4.903-1.378 7.343-0.836l-13.482 13.481c-0.55-2.47-0.262-5.045 0.837-7.342l0.104-0.218-0.098-0.221-0.031 0.013c-0.322-0.632-1.831-2.38-7.498-8.944l-0.185-0.215-0.282 0.038c-0.338 0.045-0.668 0.069-0.981 0.069-0.595 0-1.053-0.083-1.38-0.176z"> </path> </g></svg>7</div>
+                                      <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M16 10H16.01M12 10H12.01M8 10H8.01M3 10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706 21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"></path> </g></svg>${message.responses.length}</div>
+                                      <div><svg fill="#000000" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-2.5 0 32 32"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path fill="#000000" d="M0 10.284l0.505 0.36c0.089 0.064 0.92 0.621 2.604 0.621 0.27 0 0.55-0.015 0.836-0.044 3.752 4.346 6.411 7.472 7.060 8.299-1.227 2.735-1.42 5.808-0.537 8.686l0.256 0.834 7.63-7.631 8.309 8.309 0.742-0.742-8.309-8.309 7.631-7.631-0.834-0.255c-2.829-0.868-5.986-0.672-8.686 0.537-0.825-0.648-3.942-3.3-8.28-7.044 0.11-0.669 0.23-2.183-0.575-3.441l-0.352-0.549-8.001 8.001zM1.729 10.039l6.032-6.033c0.385 1.122 0.090 2.319 0.086 2.334l-0.080 0.314 0.245 0.214c7.409 6.398 8.631 7.39 8.992 7.546l-0.002 0.006 0.195 0.058 0.185-0.087c2.257-1.079 4.903-1.378 7.343-0.836l-13.482 13.481c-0.55-2.47-0.262-5.045 0.837-7.342l0.104-0.218-0.098-0.221-0.031 0.013c-0.322-0.632-1.831-2.38-7.498-8.944l-0.185-0.215-0.282 0.038c-0.338 0.045-0.668 0.069-0.981 0.069-0.595 0-1.053-0.083-1.38-0.176z"> </path> </g></svg>${message.reactions.length}</div>
                                     </div>
-                                    <div class="reponses${id}"></div>
-                                  <div class="reaction${id}"></div>
+                                 
                                   </div>
                     `
 
 
 }
+
 function getRandomColor() {
     let red = Math.floor(Math.random() * 256);
     let green = Math.floor(Math.random() * 256);
     let blue = Math.floor(Math.random() * 256);
- return `rgb(${red}, ${green}, ${blue})`;
+    return `rgb(${red}, ${green}, ${blue})`;
 }
 
 // -----------------------------------------
 // -------------Envoyer
 // -----------------------------------------
 
-function postMessage(message) {
-    console.log(token, message)
+async function postMessage(message) {
     const messengerMessage =
         {
             method: 'POST',
@@ -434,25 +386,105 @@ function postMessage(message) {
             })
         }
 
-    fetch('https://b1messenger.imatrythis.tk/api/messages/new', messengerMessage)
+    await fetch('https://b1messenger.imatrythis.tk/api/messages/new', messengerMessage)
         .then(response => response.json())
         .then(data => {
             //"ok"
-
-            run()
+            console.log(data)
 
 
         })
 }
 
-function sendMessage(messageAEnvoyer) {
-    postMessage(messageAEnvoyer.value)
-    messageAEnvoyer.value = ""
-}
-
 // -----------------------------------------
 // -------------Modifier Message
 // -----------------------------------------
+function modifierInnerMessage(e, textarea, methode) {
+
+    if (e.key === 'Enter' || e === 'null') {
+        if (e.key === 'Enter') {
+            e.preventDefault()
+        }
+
+        if (e.shiftKey) {
+            textarea.value += '\n'
+        } else {
+            if (methode === 'a') {
+                if (isNotEmpty(textarea.value)) {
+                    postMessage(textarea.value).then(response => {
+                        textarea.value = ''; // Clear the input after sending}
+                        console.log('reset')
+                        run()
+                    });
+
+                }
+            } else {
+                return textarea.value
+            }
+
+
+        }
+    }
+}
+function addActions(message){
+    let id = message.id
+    if (message.author.username === nom.value) {
+        document.querySelector(`.option${id}`).innerHTML += `
+               <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
+                <div class="crayon" id=${id}> <i class="bi bi-pencil"></i></div>
+            
+              `
+    } else {
+        document.querySelector(`.option${id}`).innerHTML += `
+               <div class="reaction" id=${id}><i class="bi bi-chat-square-heart"></i></div>
+               <div class="repondre" id=${id}>    <i class="bi bi-chat"></i></div>`
+
+        if (!isEmptyList(message.responses)) {
+            let reponse = document.querySelector(`.reponses${id}}`)
+
+            reponse.innerHTML = `${message.responses.lenght} Réponses...`
+            reponse.addEventListener('click', () => {
+                console.log('click reponse')
+            })
+        }
+
+
+    }
+}
+
+function addActionEvent(){
+    let poubelles = document.querySelectorAll('.poubelle');
+    let crayons = document.querySelectorAll('.crayon');
+    let reactions = document.querySelectorAll('.reaction');
+    let repondres = document.querySelectorAll('.repondre');
+
+    poubelles.forEach((poubelle) => {
+        poubelle.addEventListener('click', () => {
+            supprimerMessage(poubelle.id)
+        });
+    });
+
+    crayons.forEach((crayon) => {
+        crayon.addEventListener('click', () => {
+            console.log(crayon.id)
+            modifierMessage(crayon.id);
+        });
+    });
+
+    reactions.forEach((reaction) => {
+        reaction.addEventListener('click', () => {
+            reactionMessage(reaction.id)
+        });
+    });
+
+    repondres.forEach((repondre) => {
+        repondre.addEventListener('click', () => {
+            console.log(repondre)
+            repondreMessaage(repondre.id)
+        });
+    });
+}
+
 function supprimerMessage(id) {
 
     const supprimerParam =
@@ -464,58 +496,75 @@ function supprimerMessage(id) {
             },
 
         }
-    fetch(`${baseUrl}api/messages/delete/${id}`,supprimerParam).then(response=>response.json()).then(data=>{
+    fetch(`${baseUrl}api/messages/delete/${id}`, supprimerParam).then(response => response.json()).then(data => {
         run()
     })
 }
 
 function modifierMessage(id) {
-    let message = document.querySelector(`.messaageContenu${id}`)
-    let messageInput = document.createElement('input')
-    messageInput.value = message.innerHTML
-    messageInput.type = 'text'
-    message.replaceWith(messageInput)
+    let message = document.querySelector(`.messaageContenu${id}`);
+    message.readOnly = false;
+    message.classList.add('textareamodify')
+    message.addEventListener('keydown', (e) => {
+        let nvCOntenu = modifierInnerMessage(e, message, 'b')
+        const param = {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                'content': `${nvCOntenu}  (Modified)`
+            })
+        };
 
-    messageInput.addEventListener('keypress',(e)=>{
-        if(e.key === 'Enter'){
-            console.log('entrer')
-            const param =
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        'content': `${messageInput.value}  (Modified)`
-                    })
-                }
-            console.log(id)
-            fetch(`${baseUrl}api/messages/${id}/edit`, param)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                     message = document.createElement('p')
-                    message.innerHTML = messageInput.value
-                    message.classList.add(`messaageContenu${id}`)
-                    messageInput.replaceWith(message)
-                    run()
+        fetch(`${baseUrl}api/messages/${id}/edit`, param)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                message.classList.remove('textareamodify')
+                run();
+            });
 
-                })
-
-
-        }
     })
-
-
-
 }
 
-function reactionMessage(id) {
-let reaction = document.querySelector(`.reaction${id}}`)
-
+async function reactionMessage(id) {
+    console.log(id)
+    const messengerReact =
+        {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        }
+  await fetch(`${baseUrl}api/reaction/message/${id}/lol`,messengerReact)
+      .then(response=>response.json())
+      .then(data=>{
+          console.log(data)
+      })
 }
 
-function repondreMessaage(id) {
-
+async function repondreMessaage(id) {
+    console.log(id)
+    const messengerReact =
+        {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                'content': 'coucou'
+            })
+        }
+    await fetch(`${baseUrl}api/response/${id}/new`,messengerReact)
+        .then(response=>response.json())
+        .then(data=>{
+            console.log(data)
+        })
 }
+
+//https://twitter.com/One_div
+let ancien_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDAyMjkzMzYsImV4cCI6MTcwMDIzMjkzNiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoibWV5In0.OH21OyxWOGhvTnIZNH2GsST0p4zrwWWbZMhs2UBNdsNDK0bo4csH3sqjFaY1C4JS4T1W9XHy-6qLqdVhIrh3cCvwrg6G4m1d-MRMN0YieYOBQ74CR6JdV_S3h0w9TTHkoFbELn6GM2jRNwZtHtpUarTfX4b51cXYOwU6XBfjpzcONTSrR4FwP-HWI32LzFbzNh56iXHxJX2a1qRh93aUPHO1MqNjGDM6fZRwT_R0p22UneBhlRydfdDtt8EUGoYb4y076JQGbZ9UK9V5lsR88i-pmSl94Jh0_dqCSOntuBGHCij_N4QCoYrdl_NinIdWMt6o2nazN5IbtyJQ3nU4OQ'
