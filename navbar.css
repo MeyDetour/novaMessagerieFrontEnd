@@ -11,7 +11,7 @@
     top: 1%;
     padding-top: 57px;
     /* color: black; */
-    font-size: 3em;
+    font-size: 2em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -26,15 +26,13 @@ li{
     color: var(--joyeux);
     text-decoration: none;
 }
-.carre-navbar{position: absolute;
-    display: block;
-    top: 0px;
+
+.fond{
     background-color: #dadada;
     border-radius: 20px;
     padding: 16px;
-    transition: 1s;
-
+    display: block;
 }
-.navbar__itemFqke{
-    opacity: 0;
+.navbar__item{
+    z-index: 1;
 }
