@@ -1,13 +1,13 @@
-let icones = document.querySelectorAll('.navbar__item')
-let carre = document.querySelector('.carre-navbar')
+let icones = document.querySelectorAll('.bi')
 
 icones.forEach((icone)=> {
     icone.addEventListener('mouseover', () => {
-        let pos = icone.getBoundingClientRect()
-        carre.style.display = 'block'
-        console.log(pos,pos.top)
-        carre.style.top = `${pos.top}px`;
+       icone.classList.toggle('fond')
 
+
+    })
+    icone.addEventListener('mouseout', () => {
+        icone.classList.toggle('fond')
 
 
     })
