@@ -11,17 +11,20 @@ addStyleRule('.centered', `display :flex ; justify-content : center ; align-item
 
 
 //=======================================================================
-let token = null
+let ancien_token = null
+let freshener = ""
+let token = ancien_token
 let error2 = ""
+let error = ""
 //checker les cookies du navigateur et le rempalcer
 //formulaire acceptation coockie
 let content = document.querySelector('.containerFond')
 const baseUrl = "https://b1messenger.imatrythis.tk/"
-let nom = " "
-let mdp = " "
+let nom = ""
+let mdp = ""
 
-nomsignup = ""
-mdpsignup = ""
+let nomsignup = ""
+let mdpsignup = ""
 run()
 
 function run() {
@@ -43,7 +46,7 @@ function scrollY() {
     filD.scrollTo(0, filD.scrollHeight);
 }
 
-function render(contenu) {
+async function render(contenu) {
     content.innerHTML = ""
     content.innerHTML = contenu
 
@@ -93,7 +96,6 @@ function renderForm() {
     error = document.querySelector('.error')
     const buttonLogin = document.querySelector('#buttonLogin')
     const signup = document.querySelector('#signup')
-    const forgotmdp = document.querySelector('.forgotmdp')
     nom = document.querySelector('#username')
     mdp = document.querySelector('#password')
 nom.focus()
@@ -106,8 +108,10 @@ nom.focus()
 
     mdp.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            getToken(nom.value, mdp.value)
-            buttonLogin.classList.toggle('d-none')
+             getToken(nom.value, mdp.value).then(response => {
+                 buttonLogin.classList.toggle('d-none')
+             })
+
         }
 
     })
@@ -117,7 +121,6 @@ nom.focus()
     })
 
     buttonLogin.addEventListener('click', () => {
-
         getToken(nom.value, mdp.value)
 
     })
@@ -237,8 +240,10 @@ async function getToken(name, mdpasse) {
                 mdp.value = ""
                 nom.focus()
             } else {
-                console.log(token)
+                console.log(data)
+                console.log('token : ',data.token)
                 token = data.token
+                freshener =  data.freshener
                 run()
                 //stocker dans les cookies
             }
@@ -264,40 +269,45 @@ function renderMessage(listeMessage) {
 
         </div>
         <div class="postMessage">
-          <textarea title="Write Message" tabindex="i" placeholder="Message.." class="msgInput"></textarea>
+          <textarea title="Write Message" tabindex=1 placeholder="Message.." class="msgInput"></textarea>
 
-            <i class="bi bi-send"></i>
+            <i class="bi bi-send sendBtn"></i>
             <i class="bi bi-arrow-clockwise refreshBtn"></i>
         </div>
     </div>
     `
     render(fil)
-    let bouttonSend = document.querySelector('.bi-send')
+
+    let bouttonSend = document.querySelector('.sendBtn')
     let boutonRefresh = document.querySelector('.refreshBtn')
     const messageAEnvoyer = document.querySelector('.msgInput')
-
+    console.log(    messageAEnvoyer )
     messageAEnvoyer.focus()
 
+    console.log(    messageAEnvoyer , bouttonSend  , boutonRefresh)
 
     messageAEnvoyer.addEventListener('keydown', (e) => {
-        modifierInnerMessage(e, messageAEnvoyer, 'a') //envoie le message
-    })
+        console.log('a');
+        modifierInnerMessage(e, messageAEnvoyer, 'a'); //envoie le message
+    });
+
     bouttonSend.addEventListener('click', () => {
-        console.log(messageAEnvoyer.value)
+        console.log(messageAEnvoyer.value);
         if (isNotEmpty(messageAEnvoyer.value)) {
-            modifierInnerMessage('null', messageAEnvoyer, 'a') //envoie le message
+            modifierInnerMessage('null', messageAEnvoyer, 'a'); //envoie le message
         }
-    })
+    });
+
     boutonRefresh.addEventListener('click', () => {
-        run()
-    })
+        run();
+    });
+
+
     listeMessage.forEach((message) => {
         addMessage(message)
         addActions(message)
     })
     addActionEvent()
-
-
 
 }
 
@@ -309,14 +319,18 @@ async function getMessages() {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${token}`
-            },
+            }
         }
     return await fetch(`${baseUrl}api/messages`, messengerMessage)
         .then(response => response.json())
         .then(data => {
             if (data.message === "Invalid credentials.") {
                 renderForm()
-            } else {
+            }
+            if(data.message === 'Expired JWT Token'){
+                refreshToken()
+            }
+            else {
                 return data
             }
 
@@ -334,7 +348,6 @@ function identifier(usernom) {
 function addMessage(message) {
     const zoneMessage = document.querySelector('.messages')
     let id = message.id
-    console.log(message.reactions,message.responses)
     zoneMessage.innerHTML += `                    
                               <div class="task ">
                                 <div class="tags">
@@ -344,7 +357,7 @@ function addMessage(message) {
                                     </button>
                                 </div>
                                 <div >
-                               <textarea readonly class='textareaMessage messaageContenu${id}'>${message.content}</textarea>
+                               <textarea readonly class='textareaMessage messageContenu${id}'>${message.content}</textarea>
 
                                 </div>
                               
@@ -502,7 +515,7 @@ function supprimerMessage(id) {
 }
 
 function modifierMessage(id) {
-    let message = document.querySelector(`.messaageContenu${id}`);
+    let message = document.querySelector(`.messageContenu${id}`);
     message.readOnly = false;
     message.classList.add('textareamodify')
     message.addEventListener('keydown', (e) => {
@@ -566,5 +579,27 @@ async function repondreMessaage(id) {
         })
 }
 
+// -----------------------------------------
+// -------------Modifier Message
+// -----------------------------------------
+async function refreshToken(){
+    const freshParam =
+        {
+            method: 'POST',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify(freshener)
+        }
+    await fetch(`${baseUrl}refreshthistoken`,freshParam)
+        .then(response => response.json())
+        .then(data => {
+            token = data.token
+            freshener =  data.freshener
+            run()
+        })
+}
+async function logout(){
+
+}
+
 //https://twitter.com/One_div
-let ancien_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDAyMjkzMzYsImV4cCI6MTcwMDIzMjkzNiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoibWV5In0.OH21OyxWOGhvTnIZNH2GsST0p4zrwWWbZMhs2UBNdsNDK0bo4csH3sqjFaY1C4JS4T1W9XHy-6qLqdVhIrh3cCvwrg6G4m1d-MRMN0YieYOBQ74CR6JdV_S3h0w9TTHkoFbELn6GM2jRNwZtHtpUarTfX4b51cXYOwU6XBfjpzcONTSrR4FwP-HWI32LzFbzNh56iXHxJX2a1qRh93aUPHO1MqNjGDM6fZRwT_R0p22UneBhlRydfdDtt8EUGoYb4y076JQGbZ9UK9V5lsR88i-pmSl94Jh0_dqCSOntuBGHCij_N4QCoYrdl_NinIdWMt6o2nazN5IbtyJQ3nU4OQ'
+

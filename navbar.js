@@ -1,4 +1,4 @@
-let icones = document.querySelectorAll('.bi')
+let icones = document.querySelectorAll('.iconeNAvbar')
 
 icones.forEach((icone)=> {
     icone.addEventListener('mouseover', () => {
