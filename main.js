@@ -268,7 +268,10 @@ function renderInterface() {
 
     navbar.innerHTML =
    `
+  <a href="#" class="btn-opt-navbar "><i class="menunavbar bi bi-list"></i></a>
+ 
     <div class="navbar__item   ">
+    
         <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-house-door"></i></a>
   
         <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-chat-left"></i></a>

@@ -51,8 +51,6 @@ body {
 .loginform {
     width: 50%;
     height: 90vh;
-    position: absolute;
-    bottom: 0%;
 
     display: flex;
     flex-direction: column;

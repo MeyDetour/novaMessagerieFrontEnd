@@ -20,7 +20,7 @@ li{
     list-style-type: none;
 
 }
-.btn-opt-navbar{
+.menunavbar,.btn-opt-navbar{
     color: var(--joyeux);
     text-decoration: none;
 }
@@ -30,6 +30,10 @@ li{
     border-radius: 20px;
     padding: 16px;
     display: block;
+}
+.menunavbar{
+    font-size: 2.4em;
+    display: none;
 }
 .navbar__item{
     display: flex;
@@ -75,4 +79,27 @@ li{
 .convPrivéListe {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+
+@media only screen and (max-width: 1048px) {
+
+    .navbarInterface{
+        width: 100%;
+        flex-direction: row;
+        height: 10%;
+        border-radius: 0px 0px 20px 20px;
+    }
+    .convPrivéListe{
+        display: none;
+    }
+    .navbar__item{
+        display: none;
+    }
+    .menunavbar{
+        display: block;
+        position: absolute;
+        left: 2%;
+        top: 2%;
+    }
 }
