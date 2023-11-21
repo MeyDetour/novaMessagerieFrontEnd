@@ -14,18 +14,22 @@ addStyleRule('.centered', `display :flex ; justify-content : center ; align-item
 let ancien_token = null
 let freshener = ""
 let token = ancien_token
+let imgpdp = null
 let error2 = ""
 let error = ""
 //checker les cookies du navigateur et le rempalcer
 //formulaire acceptation coockie
 let content = document.querySelector('.containerFond')
-const baseUrl = "https://b1messenger.imatrythis.tk/"
+const baseUrl = "https://b1messenger.imatrythis.com/"
 let nom = ""
 let mdp = ""
-
+let listemessage = ""
 let nomsignup = ""
 let mdpsignup = ""
-run()
+window.addEventListener('DOMContentLoaded', () => {
+    run()
+})
+
 
 function run() {
     console.log('run')
@@ -33,9 +37,11 @@ function run() {
         renderForm()
     } else {
         getMessages().then(response => {
+            listemessage = response
             renderMessage(response)
             renderInterface()
             scrollY()
+            addActionEvent()
         })
     }
 
@@ -46,7 +52,7 @@ function scrollY() {
     filD.scrollTo(0, filD.scrollHeight);
 }
 
-async function render(contenu) {
+function render(contenu) {
     content.innerHTML = ""
     content.innerHTML = contenu
 
@@ -59,13 +65,16 @@ function isNotEmpty(message) {
     return message.trim() !== ''
 }
 
+function isNull(variable) {
+    return variable === null
+}
+changeProfilImage()
 function isEmptyList(liste) {
     return liste.length === 0
 }
 
-// -----------------------------------------
-// Formulaire
-// -----------------------------------------
+// -----------------------------------------Formulaire
+
 
 function renderForm() {
     let form = `
@@ -98,19 +107,19 @@ function renderForm() {
     const signup = document.querySelector('#signup')
     nom = document.querySelector('#username')
     mdp = document.querySelector('#password')
-nom.focus()
+    nom.focus()
     nom.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-          mdp.focus()
+            mdp.focus()
         }
 
     })
 
     mdp.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-             getToken(nom.value, mdp.value).then(response => {
-                 buttonLogin.classList.toggle('d-none')
-             })
+            getToken(nom.value, mdp.value).then(response => {
+                buttonLogin.classList.toggle('d-none')
+            })
 
         }
 
@@ -127,9 +136,8 @@ nom.focus()
 
 }
 
-// -----------------------------------------
-// -------------Register
-// -----------------------------------------
+// -----------------------------------------Register
+
 function renderSignup() {
     let form = `
  <div class="card">
@@ -204,9 +212,8 @@ async function register(name, mdpasse) {
 }
 
 
-// -----------------------------------------
-// -------------Obtenir Token
-// -----------------------------------------
+// -----------------------------------------Obtenir Token
+
 function profilParametreFetch(name, mdpasse) {
     const utilisateur = {
         username: name,
@@ -241,27 +248,45 @@ async function getToken(name, mdpasse) {
                 nom.focus()
             } else {
                 console.log(data)
-                console.log('token : ',data.token)
+                console.log('token : ', data.token)
                 token = data.token
-                freshener =  data.freshener
+                freshener = data.freshener
+                console.log('freshener:', freshener)
                 run()
                 //stocker dans les cookies
             }
         })
 }
 
-// -----------------------------------------
-// -------------Affichage  INTERFACE
-// -----------------------------------------
-function renderInterface(){
-const template = `
+// -----------------------------------------Affichage  INTERFACE
+
+function renderInterface() {
+    let navbar = document.querySelector('.navbarInterface')
+    if(navbar.classList.contains('d-none')){
+        navbar.classList.remove('d-none')
+    }
+
+    navbar.innerHTML =
+   `
+    <div class="navbar__item   ">
+        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-house-door"></i></a>
+  
+        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-chat-left"></i></a>
+    </div>
+    <div class=" convPrivéListe">
+        <a href="#" class="btn-opt-navbar"></a>
+    </div>
+  
+    <div class="navbar__item">
+     <div class="imagepdpContainer"></div>  
+        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
+
+</div>`
    
-`
-    content.innerHTML+= template
 }
-// -----------------------------------------
-// -------------Affichage messaage
-// -----------------------------------------
+
+// -----------------------------------------Affichage messaage
+
 function renderMessage(listeMessage) {
     let fil = `
       <div class="filDiscussion">
@@ -269,7 +294,8 @@ function renderMessage(listeMessage) {
 
         </div>
         <div class="postMessage">
-          <textarea title="Write Message" tabindex=1 placeholder="Message.." class="msgInput"></textarea>
+          <textarea title="Write Message" tabindex="1" placeholder="Message.." class="msgInput"></textarea>
+        
 
             <i class="bi bi-send sendBtn"></i>
             <i class="bi bi-arrow-clockwise refreshBtn"></i>
@@ -278,36 +304,15 @@ function renderMessage(listeMessage) {
     `
     render(fil)
 
-    let bouttonSend = document.querySelector('.sendBtn')
-    let boutonRefresh = document.querySelector('.refreshBtn')
-    const messageAEnvoyer = document.querySelector('.msgInput')
-    console.log(    messageAEnvoyer )
-    messageAEnvoyer.focus()
-
-    console.log(    messageAEnvoyer , bouttonSend  , boutonRefresh)
-
-    messageAEnvoyer.addEventListener('keydown', (e) => {
-        console.log('a');
-        modifierInnerMessage(e, messageAEnvoyer, 'a'); //envoie le message
-    });
-
-    bouttonSend.addEventListener('click', () => {
-        console.log(messageAEnvoyer.value);
-        if (isNotEmpty(messageAEnvoyer.value)) {
-            modifierInnerMessage('null', messageAEnvoyer, 'a'); //envoie le message
-        }
-    });
-
-    boutonRefresh.addEventListener('click', () => {
-        run();
-    });
+    //point B
 
 
+//point c
     listeMessage.forEach((message) => {
         addMessage(message)
         addActions(message)
     })
-    addActionEvent()
+
 
 }
 
@@ -327,10 +332,9 @@ async function getMessages() {
             if (data.message === "Invalid credentials.") {
                 renderForm()
             }
-            if(data.message === 'Expired JWT Token'){
+            if (data.message === 'Expired JWT Token') {
                 refreshToken()
-            }
-            else {
+            } else {
                 return data
             }
 
@@ -347,11 +351,12 @@ function identifier(usernom) {
 
 function addMessage(message) {
     const zoneMessage = document.querySelector('.messages')
+
     let id = message.id
     zoneMessage.innerHTML += `                    
                               <div class="task ">
                                 <div class="tags">
-                                  <span class="tag">${identifier(message['author']['username'])}</span>
+                                  <button class="tag tag${id}">${identifier(message['author']['username'])}</button>
                                   <button class="options option${id} d-flex flex-row">
                                  
                                     </button>
@@ -367,8 +372,8 @@ function addMessage(message) {
                                     <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linecap="round" stroke-width="2" d="M12 8V12L15 15"></path> <circle stroke-width="2" r="9" cy="12" cx="12"></circle> </g></svg>${message['createdAt'].slice(0, 10)}</div>
                                       <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M16 10H16.01M12 10H12.01M8 10H8.01M3 10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706 21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"></path> </g></svg>${message.responses.length}</div>
                                       <div><svg fill="#000000" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-2.5 0 32 32"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path fill="#000000" d="M0 10.284l0.505 0.36c0.089 0.064 0.92 0.621 2.604 0.621 0.27 0 0.55-0.015 0.836-0.044 3.752 4.346 6.411 7.472 7.060 8.299-1.227 2.735-1.42 5.808-0.537 8.686l0.256 0.834 7.63-7.631 8.309 8.309 0.742-0.742-8.309-8.309 7.631-7.631-0.834-0.255c-2.829-0.868-5.986-0.672-8.686 0.537-0.825-0.648-3.942-3.3-8.28-7.044 0.11-0.669 0.23-2.183-0.575-3.441l-0.352-0.549-8.001 8.001zM1.729 10.039l6.032-6.033c0.385 1.122 0.090 2.319 0.086 2.334l-0.080 0.314 0.245 0.214c7.409 6.398 8.631 7.39 8.992 7.546l-0.002 0.006 0.195 0.058 0.185-0.087c2.257-1.079 4.903-1.378 7.343-0.836l-13.482 13.481c-0.55-2.47-0.262-5.045 0.837-7.342l0.104-0.218-0.098-0.221-0.031 0.013c-0.322-0.632-1.831-2.38-7.498-8.944l-0.185-0.215-0.282 0.038c-0.338 0.045-0.668 0.069-0.981 0.069-0.595 0-1.053-0.083-1.38-0.176z"> </path> </g></svg>${message.reactions.length}</div>
-                                    </div>
-                                 
+                                  
+                                     <span class="fs-5">id : ${id}</span>  </div>
                                   </div>
                     `
 
@@ -382,9 +387,8 @@ function getRandomColor() {
     return `rgb(${red}, ${green}, ${blue})`;
 }
 
-// -----------------------------------------
-// -------------Envoyer
-// -----------------------------------------
+// -----------------------------------------Envoyer
+
 
 async function postMessage(message) {
     const messengerMessage =
@@ -399,7 +403,7 @@ async function postMessage(message) {
             })
         }
 
-    await fetch('https://b1messenger.imatrythis.tk/api/messages/new', messengerMessage)
+    await fetch(`${baseUrl}api/messages/new`, messengerMessage)
         .then(response => response.json())
         .then(data => {
             //"ok"
@@ -409,29 +413,39 @@ async function postMessage(message) {
         })
 }
 
-// -----------------------------------------
-// -------------Modifier Message
-// -----------------------------------------
-function modifierInnerMessage(e, textarea, methode) {
+// -----------------------------------------Modifier Message par  raccourci et event
+
+function modifierInnerMessage(e, textarea, methode, id) {
 
     if (e.key === 'Enter' || e === 'null') {
         if (e.key === 'Enter') {
             e.preventDefault()
+            console.log('enter')
         }
 
         if (e.shiftKey) {
+            console.log('shift')
             textarea.value += '\n'
         } else {
+            console.log('juste enter')
+            console.log(methode === 'a')
+            console.log(methode === 'b')
             if (methode === 'a') {
                 if (isNotEmpty(textarea.value)) {
+                    console.log('message non empty')
                     postMessage(textarea.value).then(response => {
-                        textarea.value = ''; // Clear the input after sending}
+                        textarea.value = ''; // Clear the input after sending
                         console.log('reset')
                         run()
                     });
-
+                    console.log('message empty')
                 }
+            } else if (methode === 'b') {
+                console.log('modifier')
+                textarea.classList.toggle('textareamodify')
+                fetchModifier(textarea.value, id)
             } else {
+                console.log('return')
                 return textarea.value
             }
 
@@ -439,8 +453,11 @@ function modifierInnerMessage(e, textarea, methode) {
         }
     }
 }
-function addActions(message){
+
+function addActions(message) {
     let id = message.id
+    //   console.log(message.reactions,message.responses)
+    //  console.log(message.reactions.length,message.responses.length)
     if (message.author.username === nom.value) {
         document.querySelector(`.option${id}`).innerHTML += `
                <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
@@ -452,26 +469,23 @@ function addActions(message){
                <div class="reaction" id=${id}><i class="bi bi-chat-square-heart"></i></div>
                <div class="repondre" id=${id}>    <i class="bi bi-chat"></i></div>`
 
-        if (!isEmptyList(message.responses)) {
-            let reponse = document.querySelector(`.reponses${id}}`)
-
-            reponse.innerHTML = `${message.responses.lenght} Réponses...`
-            reponse.addEventListener('click', () => {
-                console.log('click reponse')
-            })
-        }
-
-
     }
+
 }
 
-function addActionEvent(){
+function addActionEvent() {
+
+    const bouttons = document.querySelectorAll('.sendBtn, .refreshBtn');
+    const messageAEnvoyer = document.querySelector('.msgInput')
     let poubelles = document.querySelectorAll('.poubelle');
     let crayons = document.querySelectorAll('.crayon');
     let reactions = document.querySelectorAll('.reaction');
     let repondres = document.querySelectorAll('.repondre');
 
+messageAEnvoyer.focus()
+//let tagsName = document.querySelectorAll('.tag')
     poubelles.forEach((poubelle) => {
+
         poubelle.addEventListener('click', () => {
             supprimerMessage(poubelle.id)
         });
@@ -496,7 +510,25 @@ function addActionEvent(){
             repondreMessaage(repondre.id)
         });
     });
+
+    messageAEnvoyer.addEventListener('keydown', (e) => {
+        modifierInnerMessage(e, messageAEnvoyer, 'a', null); //envoie le message
+    });
+    bouttons.forEach((boutton) => {
+
+        boutton.addEventListener('click', function () {
+
+            if (this.classList.contains('sendBtn') && isNotEmpty(messageAEnvoyer.value)) {
+                modifierInnerMessage('null', messageAEnvoyer, 'a', null); // envoie le message
+            } else if (this.classList.contains('refreshBtn')) {
+                run();
+            }
+        });
+    });
 }
+
+// -----------------------------------------options
+
 
 function supprimerMessage(id) {
 
@@ -517,46 +549,52 @@ function supprimerMessage(id) {
 function modifierMessage(id) {
     let message = document.querySelector(`.messageContenu${id}`);
     message.readOnly = false;
-    message.classList.add('textareamodify')
+    message.classList.toggle('textareamodify')
     message.addEventListener('keydown', (e) => {
-        let nvCOntenu = modifierInnerMessage(e, message, 'b')
-        const param = {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                'content': `${nvCOntenu}  (Modified)`
-            })
-        };
 
-        fetch(`${baseUrl}api/messages/${id}/edit`, param)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                message.classList.remove('textareamodify')
-                run();
-            });
+        modifierInnerMessage(e, message, 'b', id)
+
 
     })
+}
+
+async function fetchModifier(nvCOntenu, id) {
+    const param = {
+        method: 'PUT',
+        headers: {
+            'Content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            'content': `${nvCOntenu}  (Modified)`
+        })
+    };
+
+    await fetch(`${baseUrl}api/messages/${id}/edit`, param)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+            run();
+        });
 }
 
 async function reactionMessage(id) {
     console.log(id)
     const messengerReact =
         {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
         }
-  await fetch(`${baseUrl}api/reaction/message/${id}/lol`,messengerReact)
-      .then(response=>response.json())
-      .then(data=>{
-          console.log(data)
-      })
+    await fetch(`${baseUrl}api/reaction/message/${id}/lol`, messengerReact)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            run()
+        })
 }
 
 async function repondreMessaage(id) {
@@ -572,32 +610,89 @@ async function repondreMessaage(id) {
                 'content': 'coucou'
             })
         }
-    await fetch(`${baseUrl}api/response/${id}/new`,messengerReact)
-        .then(response=>response.json())
-        .then(data=>{
+    await fetch(`${baseUrl}api/responses/${id}/new`, messengerReact)
+        .then(response => response.json())
+        .then(data => {
             console.log(data)
+            run()
         })
 }
 
-// -----------------------------------------
-// -------------Modifier Message
-// -----------------------------------------
-async function refreshToken(){
+// -----------------------------------------Modifier Message
+
+async function refreshToken() {
+    console.log(freshener)
     const freshParam =
         {
             method: 'POST',
             headers: {'Content-type': 'application/json'},
-            body: JSON.stringify(freshener)
+            body: JSON.stringify({
+                "freshener": freshener
+            })
         }
-    await fetch(`${baseUrl}refreshthistoken`,freshParam)
+    fetch(`https://b1messenger.imatrythis.com/refreshthistoken`, freshParam)
         .then(response => response.json())
         .then(data => {
             token = data.token
-            freshener =  data.freshener
+            freshener = data.freshener
+            console.log(data)
+
             run()
         })
+
 }
-async function logout(){
+
+async function logout() {
+
+}
+
+// -----------------------------------------Edit profil
+function changeProfilImage() {
+    if (isNull(imgpdp)) {
+        imgpdp = 'image/defaultimg.png'
+    }
+
+    document.querySelector('.imagepdpContainer').style.backgroundImage = `url("${imgpdp}");`
+    console.log(    document.querySelector('.imagepdpContainer'))
+}
+
+function setProfilImage() {
+    const param =
+        {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "displayName": 'MeïMeï'
+            })
+
+        }
+    fetch(`${baseUrl}api/profilepicture`, param).then(response => response.json())
+        .then(data => {
+            console.log(data)
+        })
+
+}
+
+async function editDisplayName() {
+    const param =
+        {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "displayName": 'MeïMeï'
+            })
+
+        }
+    fetch(`${baseUrl}api/profile/edit`, param).then(response => response.json())
+        .then(data => {
+            console.log(data)
+        })
 
 }
 

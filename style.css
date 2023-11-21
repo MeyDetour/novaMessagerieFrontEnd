@@ -1,7 +1,7 @@
 :root {
     --joyeux: rgb(126, 84, 255);
     --hover: rgb(199, 114, 255);
-    --absent : #fafee4;
+    --absent : #f6f6f6;;
 
 
     --borderRadius: 10px;
@@ -185,6 +185,8 @@ body {
 
 .tag {
     border-radius: 100px;
+    outline: none;
+    border: 0;
     padding: 4px 13px;
     font-size: 12px;
     color: var(--joyeux);
@@ -216,6 +218,7 @@ body {
 
 .stats {
     position: relative;
+    width: 100%;
     width: 100%;
     color: #9fa4aa;
     font-size: 12px;
@@ -375,7 +378,7 @@ body {
     right: 0%;
     width: 86%;
     background-color: white;
-    height: 93%;
+    height: 100%;
 }
 
 .messages, .postMessage {
@@ -470,6 +473,8 @@ body {
 }
 
 /*================================ ===================*/
+
+
 
 @media only screen and (max-width: 1048px) {
     .loginform {
