@@ -1,7 +1,7 @@
 :root {
     --joyeux: rgb(126, 84, 255);
     --hover: rgb(199, 114, 255);
-    --absent : #f6f6f6;;
+    --absent: #f6f6f6;;
 
 
     --borderRadius: 10px;
@@ -16,12 +16,15 @@
 body {
     overflow-x: hidden;
     margin: 0%;
+    overflow-y: hidden;
 
 
 }
-::selection{
+
+::selection {
     background-color: var(--hover);
 }
+
 .containerFond {
     width: 100vw;
 
@@ -470,8 +473,41 @@ body {
 
 }
 
-/*================================ ===================*/
+.enveloppe {
+    position: absolute;
+    top: 120%;
+    opacity: 100;
+    background-image: url(image/enveloppe.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 200px;
+    height: 200px;
+    z-index: 1;
+    animation : enveloppeEnter 5s
+}
 
+@keyframes enveloppeEnter {
+    0% {
+        top: -40%;
+    }
+    60% {
+        top:70% ;
+    }
+    85% {
+        top:65% ;
+    }
+    90% {
+        top : 65%;
+    }
+    100%{
+        top : 150%
+    }
+
+}
+
+
+/*================================ ===================*/
 
 
 @media only screen and (max-width: 1048px) {

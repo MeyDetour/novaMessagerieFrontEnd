@@ -26,9 +26,7 @@ let mdp = ""
 let listemessage = ""
 let nomsignup = ""
 let mdpsignup = ""
-window.addEventListener('DOMContentLoaded', () => {
-    //run()
-})
+ setTimeout(()=>{run()},5500)
 
 
 function run() {
@@ -68,7 +66,9 @@ function isNotEmpty(message) {
 function isNull(variable) {
     return variable === null
 }
+
 changeProfilImage()
+
 function isEmptyList(liste) {
     return liste.length === 0
 }
@@ -262,12 +262,12 @@ async function getToken(name, mdpasse) {
 
 function renderInterface() {
     let navbar = document.querySelector('.navbarInterface')
-    if(navbar.classList.contains('d-none')){
+    if (navbar.classList.contains('d-none')) {
         navbar.classList.remove('d-none')
     }
 
     navbar.innerHTML =
-   `
+        `
   <a href="#" class="btn-opt-navbar "><i class="menunavbar bi bi-list"></i></a>
  
     <div class="navbar__item   ">
@@ -285,7 +285,7 @@ function renderInterface() {
         <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
 
 </div>`
-   
+
 }
 
 // -----------------------------------------Affichage messaage
@@ -485,7 +485,7 @@ function addActionEvent() {
     let reactions = document.querySelectorAll('.reaction');
     let repondres = document.querySelectorAll('.repondre');
 
-messageAEnvoyer.focus()
+    messageAEnvoyer.focus()
 //let tagsName = document.querySelectorAll('.tag')
     poubelles.forEach((poubelle) => {
 
@@ -656,7 +656,7 @@ function changeProfilImage() {
     }
 
     document.querySelector('.imagepdpContainer').style.backgroundImage = `url("${imgpdp}");`
-    console.log(    document.querySelector('.imagepdpContainer'))
+    console.log(document.querySelector('.imagepdpContainer'))
 }
 
 function setProfilImage() {
