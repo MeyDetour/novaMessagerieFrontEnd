@@ -457,6 +457,11 @@ async function getMessages() {
         })
 }
 
+function haveDisplayname(mess){
+
+
+}
+
 function identifier(usernom) {
     if (nom.value === usernom) {
         return "Vous"
