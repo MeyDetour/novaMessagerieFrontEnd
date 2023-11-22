@@ -1,6 +1,6 @@
-.navbarInterface{
+.navbarInterface {
     background-color: #ffffff;
-    box-shadow: 0px 0px 10px 5px #efefef;
+
     border: #efefef 5px solid;
     height: 100%;
     border-radius: 0px 30px 30px 0px;
@@ -9,7 +9,7 @@
     position: absolute;
 
     left: 0%;
-   top: 0%;
+    top: 0%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -17,42 +17,51 @@
     /* font-weight: 300; */
     gap: 40px;
 }
-li{
+
+li {
     list-style-type: none;
 
 }
-.menunavbar,.btn-opt-navbar{
+
+.burgernavbar, .btn-opt-navbar {
     color: var(--joyeux);
     text-decoration: none;
 }
 
-.fond{
+.fond {
     background-color: #dadada;
     border-radius: 20px;
     padding: 16px;
     display: block;
 }
-.menunavbar{
-    font-size: 2.4em;
-    display: none;
-}
-.navbar__item{
+
+
+
+.navbar__item-menu,.navbar__item {
     display: flex;
-    flex-direction: row;
     align-items: center;
     width: 100%;
-    font-size: 2.3em;
-
-
     justify-content: space-evenly;
 }
+.navbar__item{
+    font-size: 2.3em;
 
-.navbar_bottom{
+    flex-direction: row;
+}
+.navbar__item-menu{
+    font-size: 1em;
 
+    flex-direction: column ;
+
+}
+
+.navbar_bottom {
 
 
 }
-.imagepdpContainer{
+
+
+.imagepdpContainer ,.imagepdpContainer2 {
     border-radius: 50%;
     width: 63px;
     height: 63px;
@@ -63,14 +72,25 @@ li{
     background-position: center;
 }
 
-.convPrivéListe {
+.convPrivéListe ,.convPrivéListe2{
     background: linear-gradient(to top, #85858536, transparent 25%);
-    width: 100%;
-    height: 63%;
     /* border: 1px dotted #4a4a4a; */
     overflow-y: scroll;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+.convPrivéListe::-webkit-scrollbar {
+    display: none;
+}
+.convPrivéListe2::-webkit-scrollbar {
+    display: none;
 }
 
+
+.convPrivéListe{
+    width: 100%;
+    height: 63%;
+}
 /* Hide scrollbar for Chrome, Safari and Opera */
 .convPrivéListe::-webkit-scrollbar {
     display: none;
@@ -78,9 +98,10 @@ li{
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .convPrivéListe {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
+
 
 /*================================Coockie ================*/
 .cookie-consent-banner {
@@ -168,24 +189,71 @@ li{
 .cookie-consent-banner__cta:last-child {
     margin-left: 16px;
 }
-@media only screen and (max-width: 1048px) {
 
-    .navbarInterface{
+/*================================Menu ================*/
+
+
+.menunavbar {
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    padding-top: 10%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.asidemenu {
+    width: 20%;
+    border-right: 2px #ebebeb solid;
+    display: flex;
+    flex-direction: column;
+
+}
+.imagepdpContainer2{
+    position: absolute;
+    bottom: 4%;
+}
+.navbar__item-menu{
+    font-size: 2em;
+
+}
+.convPrivéListe2{
+    width: 80% ;
+}
+.burgernavbar {
+    font-size: 2.4em;
+    display: none;
+}
+.fermermenunavbar{
+    font-size: 2.4em;
+}
+@media only screen and (max-width: 1048px) {
+.cookie-consent-banner__inner{
+    padding: 32px 32px;
+}
+    .navbarInterface {
+        justify-content: flex-start;
+        padding-left: 15px;
         width: 100%;
         flex-direction: row;
         height: 10%;
         border-radius: 0px 0px 20px 20px;
     }
-    .convPrivéListe{
+
+    .convPrivéListe {
         display: none;
     }
-    .navbar__item{
+
+    .navbar__item {
         display: none;
     }
-    .menunavbar{
+
+    .burgernavbar {
         display: block;
         position: absolute;
         left: 2%;
         top: 2%;
     }
+    .navbar__item
 }

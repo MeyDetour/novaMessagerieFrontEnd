@@ -26,22 +26,24 @@ let mdp = ""
 let listemessage = ""
 let nomsignup = ""
 let mdpsignup = ""
+let croix = null
+let menuBurger = null
 
 console.log(document.cookie)
 setTimeout(() => {
     renderCoockie()
-    document.querySelector('#consentcoockie').addEventListener('click',()=>{
+    document.querySelector('#consentcoockie').addEventListener('click', () => {
         run()
     })
-    document.querySelector('#noconsentcookie').addEventListener('click',()=>{
+    document.querySelector('#noconsentcookie').addEventListener('click', () => {
         renderVide()
     })
-
 }, 2200)
 
 
 function run() {
     console.log('run')
+
     if (!token) {
         renderForm()
     } else {
@@ -49,7 +51,7 @@ function run() {
             listemessage = response
             renderMessage(response)
             renderInterface()
-                   addActionEvent()
+            addActionEvent()
             scrollY()
         })
     }
@@ -83,6 +85,7 @@ changeProfilImage()
 function isEmptyList(liste) {
     return liste.length === 0
 }
+
 
 // -----------------------------------------Formulaire
 
@@ -151,7 +154,7 @@ function renderForm() {
 
 function renderSignup() {
     let form = `
- <div class="card">
+ <div class="card" id="signupForm">
         <h4 class="title">Sign up!</h4>
 
         <div class="field">
@@ -196,6 +199,8 @@ async function register(name, mdpasse) {
     fetch(`${baseUrl}register`, profilParametreFetch(name, mdpasse))
         .then(response => response.json())
         .then(data => {
+            nom = name
+            mdp = mdpasse
             console.log(name, mdpasse)
             console.log(data)
             if (data === "username already taken" || data === "try with 6+ chars for password") {
@@ -214,7 +219,11 @@ async function register(name, mdpasse) {
                 nomsignup.value = ""
                 mdpsignup.value = ""
             } else {
-                getToken(name, mdpasse)
+                document.querySelector('#signupForm').style.filter = ' drop-shadow(2px 4px 12px green)'
+                setTimeout(
+                    renderForm
+                    , 1000)
+
 
             }
 
@@ -271,13 +280,14 @@ async function getToken(name, mdpasse) {
 }
 
 // -----------------------------------------Affichage  INTERFACE
-function renderVide(){
+function renderVide() {
     content.classList.toggle('containerFond')
     content.classList.toggle('videIntersideral')
-let temp =
-    `<h1 class="text-white">Tu viens de tomber dans le vide intersideral...</h1>`
+    let temp =
+        `<h1 class="text-white">Tu viens de tomber dans le vide intersideral...</h1>`
     render(temp)
 }
+
 function renderInterface() {
     let navbar = document.querySelector('.navbarInterface')
     if (navbar.classList.contains('d-none')) {
@@ -286,8 +296,9 @@ function renderInterface() {
 
     navbar.innerHTML =
         `
-  <a href="#" class="btn-opt-navbar "><i class="menunavbar bi bi-list"></i></a>
- 
+  <a href="#" class="btn-opt-navbar burgernavbar "><i class=" bi bi-list"></i></a>
+  <a href="#" class="btn-opt-navbar "><i class="d-none fermermenunavbar bi bi-x-lg"></i></a>
+
     <div class="navbar__item   ">
     
         <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-house-door"></i></a>
@@ -306,9 +317,32 @@ function renderInterface() {
 
 }
 
+function renderResponsiveMenu() {
+    let cont = `
+<div class="menunavbar">
+<div class="asidemenu centered"> 
+    <div class="navbar__item-menu   ">
+    
+        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-house-door"></i></a>
+  
+        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-chat-left"></i></a>
+    </div>
+        <div class="navbar__item-menu">
+            <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
+             <div class="imagepdpContainer2"></div>  
+            </div>  
+     </div>
+       <div class=" convPrivéListe2">
+        <a href="#" class="btn-opt-navbar"></a>
+    </div>
+</div>
+`
+    render(cont)
+}
+
 function renderCoockie() {
-   let  cookie =
-    ` <div class="cookie-consent-banner">
+    let cookie =
+        ` <div class="cookie-consent-banner">
         <div class="cookie-consent-banner__inner">
             <div class="cookie-consent-banner__copy">
                 <div class="cookie-consent-banner__header">Les fameux cookies ! </div>
@@ -330,9 +364,10 @@ function renderCoockie() {
 
 
 }
-function setCookie(cname,cvalue,exdays) {
+
+function setCookie(cname, cvalue, exdays) {
     const d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     let expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
@@ -341,7 +376,7 @@ function getCookie(cname) {
     let tokenstring = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
-    for(let i = 0; i < ca.length; i++) {
+    for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) == '') {
             c = c.substring(1);
@@ -364,6 +399,7 @@ function checkCookie() {
         }
     }
 }
+
 // -----------------------------------------Affichage messaage
 
 function renderMessage(listeMessage) {
@@ -432,7 +468,8 @@ function addMessage(message) {
     const zoneMessage = document.querySelector('.messages')
 
     let id = message.id
-    zoneMessage.innerHTML += `                    
+    zoneMessage.innerHTML += `        
+        <div class="containerMessage containerMessage${id}">          
                               <div class="task ">
                                 <div class="tags">
                                   <button class="tag tag${id}">${identifier(message['author']['username'])}</button>
@@ -453,7 +490,7 @@ function addMessage(message) {
                                       <div><svg fill="#000000" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-2.5 0 32 32"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path fill="#000000" d="M0 10.284l0.505 0.36c0.089 0.064 0.92 0.621 2.604 0.621 0.27 0 0.55-0.015 0.836-0.044 3.752 4.346 6.411 7.472 7.060 8.299-1.227 2.735-1.42 5.808-0.537 8.686l0.256 0.834 7.63-7.631 8.309 8.309 0.742-0.742-8.309-8.309 7.631-7.631-0.834-0.255c-2.829-0.868-5.986-0.672-8.686 0.537-0.825-0.648-3.942-3.3-8.28-7.044 0.11-0.669 0.23-2.183-0.575-3.441l-0.352-0.549-8.001 8.001zM1.729 10.039l6.032-6.033c0.385 1.122 0.090 2.319 0.086 2.334l-0.080 0.314 0.245 0.214c7.409 6.398 8.631 7.39 8.992 7.546l-0.002 0.006 0.195 0.058 0.185-0.087c2.257-1.079 4.903-1.378 7.343-0.836l-13.482 13.481c-0.55-2.47-0.262-5.045 0.837-7.342l0.104-0.218-0.098-0.221-0.031 0.013c-0.322-0.632-1.831-2.38-7.498-8.944l-0.185-0.215-0.282 0.038c-0.338 0.045-0.668 0.069-0.981 0.069-0.595 0-1.053-0.083-1.38-0.176z"> </path> </g></svg>${message.reactions.length}</div>
                                   
                                      <span class="fs-5">id : ${id}</span>  </div>
-                                  </div>
+                                  </div></div>  
                     `
 
 
@@ -537,13 +574,17 @@ function addActions(message) {
     let id = message.id
     //   console.log(message.reactions,message.responses)
     //  console.log(message.reactions.length,message.responses.length)
+    let containermessage = document.querySelector(`.containerMessage${id}`)
+
     if (message.author.username === nom.value) {
+        containermessage.classList.add('rightMessage')
         document.querySelector(`.option${id}`).innerHTML += `
                <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
                 <div class="crayon" id=${id}> <i class="bi bi-pencil"></i></div>
             
               `
     } else {
+        containermessage.classList.add('leftMessage')
         document.querySelector(`.option${id}`).innerHTML += `
                <div class="reaction" id=${id}><i class="bi bi-chat-square-heart"></i></div>
                <div class="repondre" id=${id}>    <i class="bi bi-chat"></i></div>`
@@ -553,7 +594,8 @@ function addActions(message) {
 }
 
 function addActionEvent() {
-
+ croix = document.querySelector('.fermermenunavbar')
+     menuBurger = document.querySelector('.burgernavbar')
     const bouttons = document.querySelectorAll('.sendBtn, .refreshBtn');
     const messageAEnvoyer = document.querySelector('.msgInput')
     let poubelles = document.querySelectorAll('.poubelle');
@@ -562,6 +604,16 @@ function addActionEvent() {
     let repondres = document.querySelectorAll('.repondre');
 
     messageAEnvoyer.focus()
+    window.addEventListener('resize',()=>{
+        console.log('a')
+        run()
+    })
+    croix.addEventListener('click', () => {
+        fermermenu()
+    })
+    menuBurger.addEventListener('click', () => {
+        renderResponsiveMenu()
+    })
 //let tagsName = document.querySelectorAll('.tag')
     poubelles.forEach((poubelle) => {
 
@@ -604,12 +656,11 @@ function addActionEvent() {
             }
         });
     });
-document.querySelectorAll("textarea").forEach((textarea)=>{
-    textarea.style.height = "1px";
-    console.log(textarea.scrollHeight)
-    textarea.style.height = (25+textarea.scrollHeight)+"px";
+    document.querySelectorAll(".textareaMessage").forEach((textarea) => {
+        textarea.style.height = "1px";
+        textarea.style.height = (25 + textarea.scrollHeight) + "px";
 
-})
+    })
 
 }
 
@@ -732,6 +783,18 @@ async function logout() {
 
 }
 
+// -----------------------------------------MENU NQVBQR
+function fermermenu(){
+    renderMessage(listemessage)
+    croix.classList.toggle('d-none')
+    menuBurger.style.display = 'block'
+    run()
+}
+function ouvrirmenu(){
+    renderResponsiveMenu()
+    croix.classList.toggle('d-none')
+    menuBurger.style.display = 'none'
+}
 // -----------------------------------------Edit profil
 function changeProfilImage() {
     if (isNull(imgpdp)) {
