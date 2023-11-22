@@ -27,7 +27,7 @@ let listemessage = ""
 let nomsignup = ""
 let mdpsignup = ""
 window.addEventListener('DOMContentLoaded', () => {
-    run()
+    //run()
 })
 
 

@@ -1,0 +1,11 @@
+#triangle-code-top,#triangle-code-left{
+    display : inline-block;
+    height: 0;
+    width: 0;
+}
+.animation{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
