@@ -24,7 +24,14 @@ body {
 ::selection {
     background-color: var(--hover);
 }
-
+.videIntersideral{
+    width: 100vw;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-image: url("image/vide.png");
+}
 .containerFond {
     width: 100vw;
 
@@ -460,6 +467,7 @@ body {
 .textareamodify, .textareaMessage {
     width: 94%;
     margin-top: 10px;
+    height: fit-content;
     margin-bottom: 10px;
 }
 
@@ -484,7 +492,7 @@ body {
     width: 200px;
     height: 200px;
     z-index: 1;
-    animation : enveloppeEnter 5s
+    animation : enveloppeEnter 2s
 }
 
 @keyframes enveloppeEnter {

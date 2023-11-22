@@ -26,7 +26,18 @@ let mdp = ""
 let listemessage = ""
 let nomsignup = ""
 let mdpsignup = ""
- setTimeout(()=>{run()},5500)
+
+console.log(document.cookie)
+setTimeout(() => {
+    renderCoockie()
+    document.querySelector('#consentcoockie').addEventListener('click',()=>{
+        run()
+    })
+    document.querySelector('#noconsentcookie').addEventListener('click',()=>{
+        renderVide()
+    })
+
+}, 2200)
 
 
 function run() {
@@ -38,8 +49,8 @@ function run() {
             listemessage = response
             renderMessage(response)
             renderInterface()
+                   addActionEvent()
             scrollY()
-            addActionEvent()
         })
     }
 
@@ -250,8 +261,9 @@ async function getToken(name, mdpasse) {
                 console.log(data)
                 console.log('token : ', data.token)
                 token = data.token
+                setCookie("token", token, 30);
                 freshener = data.freshener
-                console.log('freshener:', freshener)
+
                 run()
                 //stocker dans les cookies
             }
@@ -259,7 +271,13 @@ async function getToken(name, mdpasse) {
 }
 
 // -----------------------------------------Affichage  INTERFACE
-
+function renderVide(){
+    content.classList.toggle('containerFond')
+    content.classList.toggle('videIntersideral')
+let temp =
+    `<h1 class="text-white">Tu viens de tomber dans le vide intersideral...</h1>`
+    render(temp)
+}
 function renderInterface() {
     let navbar = document.querySelector('.navbarInterface')
     if (navbar.classList.contains('d-none')) {
@@ -288,6 +306,64 @@ function renderInterface() {
 
 }
 
+function renderCoockie() {
+   let  cookie =
+    ` <div class="cookie-consent-banner">
+        <div class="cookie-consent-banner__inner">
+            <div class="cookie-consent-banner__copy">
+                <div class="cookie-consent-banner__header">Les fameux cookies ! </div>
+                <div class="cookie-consent-banner__description">C'est juste pour te prévenir que ce site utilise des coockies, si tu n'es pas d'accord.. Pars. 
+            </div>  </div>
+
+            <div class="cookie-consent-banner__actions">
+                <a href="#" id="consentcoockie" class="cookie-consent-banner__cta">
+                    OK
+                </a>
+
+                <a href="#" id="noconsentcookie" class="cookie-consent-banner__cta cookie-consent-banner__cta--secondary">
+                    Partir
+                </a>
+            </div>
+        </div></div>
+    `
+    render(cookie)
+
+
+}
+function setCookie(cname,cvalue,exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    let tokenstring = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == '') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(tokenstring) == 0) {
+            return c.substring(tokenstring.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    let dataToken = getCookie("token");
+    if (dataToken != "") {
+        token = dataToken
+    } else {
+        if (dataToken != "" && dataToken != null) {
+            run()
+
+        }
+    }
+}
 // -----------------------------------------Affichage messaage
 
 function renderMessage(listeMessage) {
@@ -528,6 +604,13 @@ function addActionEvent() {
             }
         });
     });
+document.querySelectorAll("textarea").forEach((textarea)=>{
+    textarea.style.height = "1px";
+    console.log(textarea.scrollHeight)
+    textarea.style.height = (25+textarea.scrollHeight)+"px";
+
+})
+
 }
 
 // -----------------------------------------options
