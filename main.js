@@ -23,6 +23,7 @@ let error = ""
 let content = document.querySelector('.containerFond')
 const baseUrl = "https://b1messenger.imatrythis.com/"
 let nomUser = ""
+let dpnUser = "" // display name user
 let homemresponsive = null
 let listemessage = ""
 let nomsignup = ""
@@ -850,22 +851,40 @@ function renderEditProfil(){
         <div class="paramcontenuEditProfil">
         <div class="optEditProfilImagePdp image"></div>
             <div class="editProfil">
-                <label for="paramDisplayName">Nom d'affichage : </label>
-                <input type="text" name="displayname" id="paramDisplayName" readonly value="">
-                <label for="paramUsername">Nom d'utilisateur : </label>
-                <input type="text" name="username" id="paramUsername" readonly value="">
-
+                <label for="paramDisplayName">Nom d'affichage :  </label>
+                <input type="text" name="displayname" id="paramDisplayName"  value="">
+                <label for="paramUsername">Nom d'utilisateur : ${nomUser}  </label>
+            
             </div>
 
         </div>
         <label for="paramProfilBio">Bio : </label>
-        <textarea type="text" name="bio" id="paramProfilBio" readonly value=""></textarea>
+        <textarea type="text" name="bio" id="paramProfilBio"  value=""></textarea>
   </div>
     </div>
     `
     render(fil)
+    verifyDpn(document.querySelector('#paramDisplayName'))
 }
+function verifyDpn(input){
 
+    input.addEventListener('keydown',(e)=>{
+        console.log(input.value)
+        if(e.key === 'Enter'){
+            if( isNotEmpty(input.value) && input.value.length > 2){
+                input.blur()
+                dpnUser = input.value
+                editDisplayName(input.value)
+
+            }
+            else{
+                input.value = null
+            }
+
+        }
+    })
+
+}
 function changeProfilImage() {
     if (isNull(imgpdp)) {
         imgpdp = 'image/defaultimg.png'
@@ -899,7 +918,7 @@ function setProfilImage() {
 
 }
 
-async function editDisplayName() {
+async function editDisplayName(dpn) {
     const param =
         {
             method: 'PUT',
@@ -908,11 +927,11 @@ async function editDisplayName() {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                "displayName": 'MeïMeï'
+                "displayName": dpn
             })
 
         }
-    fetch(`${baseUrl}api/profile/edit`, param).then(response => response.json())
+    await fetch(`${baseUrl}api/profile/edit`, param).then(response => response.json())
         .then(data => {
             console.log(data)
         })
