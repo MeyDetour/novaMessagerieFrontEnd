@@ -21,8 +21,8 @@ let error = ""
 //formulaire acceptation coockie
 let content = document.querySelector('.containerFond')
 const baseUrl = "https://b1messenger.imatrythis.com/"
-let nom = ""
-let mdp = ""
+let nomUser = ""
+
 let listemessage = ""
 let nomsignup = ""
 let mdpsignup = ""
@@ -119,8 +119,8 @@ function renderForm() {
     error = document.querySelector('.error')
     const buttonLogin = document.querySelector('#buttonLogin')
     const signup = document.querySelector('#signup')
-    nom = document.querySelector('#username')
-    mdp = document.querySelector('#password')
+    let nom = document.querySelector('#username')
+    let mdp = document.querySelector('#password')
     nom.focus()
     nom.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -131,7 +131,7 @@ function renderForm() {
 
     mdp.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            getToken(nom.value, mdp.value).then(response => {
+            getToken(nom, mdp).then(response => {
                 buttonLogin.classList.toggle('d-none')
             })
 
@@ -144,7 +144,7 @@ function renderForm() {
     })
 
     buttonLogin.addEventListener('click', () => {
-        getToken(nom.value, mdp.value)
+        getToken(nom, mdp)
 
     })
 
@@ -185,7 +185,7 @@ function renderSignup() {
     mdpsignup = document.querySelector('#mdpsignup')
 
     submitsignup.addEventListener('click', () => {
-        register(nomsignup.value, mdpsignup.value)
+        register(nomsignup, mdpsignup)
     })
 
     btnlogin.addEventListener('click', () => {
@@ -199,9 +199,8 @@ async function register(name, mdpasse) {
     fetch(`${baseUrl}register`, profilParametreFetch(name, mdpasse))
         .then(response => response.json())
         .then(data => {
-            nom = name
-            mdp = mdpasse
-            console.log(name, mdpasse)
+
+
             console.log(data)
             if (data === "username already taken" || data === "try with 6+ chars for password") {
                 if (data === "try with 6+ chars for password") {
@@ -216,13 +215,15 @@ async function register(name, mdpasse) {
                         error2.textContent = ""
                     }, 2000)
                 }
-                nomsignup.value = ""
-                mdpsignup.value = ""
+                name.value = ""
+                mdpasse.value = ""
             } else {
                 document.querySelector('#signupForm').style.filter = ' drop-shadow(2px 4px 12px green)'
-                setTimeout(
-                    renderForm
-                    , 1000)
+                setTimeout(()=> {
+                    nomUser = name.value
+
+                    renderForm()
+                }, 1000)
 
 
             }
@@ -236,8 +237,8 @@ async function register(name, mdpasse) {
 
 function profilParametreFetch(name, mdpasse) {
     const utilisateur = {
-        username: name,
-        password: mdpasse,
+        username: name.value,
+        password: mdpasse.value,
     }
     const messengerLogin =
         {
@@ -270,6 +271,8 @@ async function getToken(name, mdpasse) {
                 console.log(data)
                 console.log('token : ', data.token)
                 token = data.token
+                nomUser = name.value
+
                 setCookie("token", token, 30);
                 freshener = data.freshener
 
@@ -310,7 +313,12 @@ function renderInterface() {
     </div>
   
     <div class="navbar__item">
-     <div class="imagepdpContainer"></div>  
+            <div class="imagepdpContainer image" ><div class="popoverOptProfil d-none  centered">
+                <span class="popoverOption ">Statut</span>   
+                  <span class="popoverOption" onclick="renderEditProfil()">Edit Profil</span> 
+                    <span class="  ">Deconnexion</span> 
+                
+                    </div></div> 
         <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
 
 </div>`
@@ -329,7 +337,7 @@ function renderResponsiveMenu() {
     </div>
         <div class="navbar__item-menu">
             <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
-             <div class="imagepdpContainer2"></div>  
+             <div class="imagepdpContainer2 image"></div>  
             </div>  
      </div>
        <div class=" convPrivéListe2">
@@ -346,6 +354,7 @@ function renderCoockie() {
         <div class="cookie-consent-banner__inner">
             <div class="cookie-consent-banner__copy">
                 <div class="cookie-consent-banner__header">Les fameux cookies ! </div>
+              
                 <div class="cookie-consent-banner__description">C'est juste pour te prévenir que ce site utilise des coockies, si tu n'es pas d'accord.. Pars. 
             </div>  </div>
 
@@ -457,16 +466,24 @@ async function getMessages() {
         })
 }
 
-function haveDisplayname(mess){
-
+function haveDisplayname(a){
+    console.log(a)
+    if(isNull(a.displayName)){
+        return a.username
+    }
+    else {
+        return a.displayName
+    }
 
 }
 
-function identifier(usernom) {
-    if (nom.value === usernom) {
-        return "Vous"
+function identifier(mess) {
+    let auteur = mess.author
+    console.log(nomUser)
+    if (nomUser === auteur.username) {
+        return ` Vous : ${haveDisplayname(auteur)}`
     }
-    return usernom
+    return haveDisplayname(auteur)
 }
 
 function addMessage(message) {
@@ -477,7 +494,7 @@ function addMessage(message) {
         <div class="containerMessage containerMessage${id}">          
                               <div class="task ">
                                 <div class="tags">
-                                  <button class="tag tag${id}">${identifier(message['author']['username'])}</button>
+                                  <button class="tag tag${id}">${identifier(message)}</button>
                                   <button class="options option${id} d-flex flex-row">
                                  
                                     </button>
@@ -581,7 +598,7 @@ function addActions(message) {
     //  console.log(message.reactions.length,message.responses.length)
     let containermessage = document.querySelector(`.containerMessage${id}`)
 
-    if (message.author.username === nom.value) {
+    if (message.author.username === nomUser) {
         containermessage.classList.add('rightMessage')
         document.querySelector(`.option${id}`).innerHTML += `
                <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
@@ -600,6 +617,7 @@ function addActions(message) {
 
 function addActionEvent() {
  croix = document.querySelector('.fermermenunavbar')
+    let home = document.querySelector('.bi-house-door')
      menuBurger = document.querySelector('.burgernavbar')
     const bouttons = document.querySelectorAll('.sendBtn, .refreshBtn');
     const messageAEnvoyer = document.querySelector('.msgInput')
@@ -607,7 +625,17 @@ function addActionEvent() {
     let crayons = document.querySelectorAll('.crayon');
     let reactions = document.querySelectorAll('.reaction');
     let repondres = document.querySelectorAll('.repondre');
+    let optProfil = document.querySelector('.imagepdpContainer')
 
+    optProfil.addEventListener('click',()=>{
+
+        let popoverOptProfil = document.querySelector('.popoverOptProfil')
+        popoverOptProfil.classList.toggle('d-none')
+
+    })
+home.addEventListener('click',()=>{
+    run()
+})
     messageAEnvoyer.focus()
     window.addEventListener('resize',()=>{
         console.log('a')
@@ -801,6 +829,28 @@ function ouvrirmenu(){
     menuBurger.style.display = 'none'
 }
 // -----------------------------------------Edit profil
+function renderEditProfil(){
+    let fil =`
+ <div class="paramContainer  centered">
+        <div class="paramcontenuEditProfil">
+        <div class="optEditProfilImagePdp image"></div>
+            <div class="editProfil">
+                <label for="paramDisplayName">Nom d'affichage : </label>
+                <input type="text" name="displayname" id="paramDisplayName" readonly value="">
+                <label for="paramUsername">Nom d'utilisateur : </label>
+                <input type="text" name="username" id="paramUsername" readonly value="">
+
+            </div>
+
+        </div>
+        <label for="paramProfilBio">Bio : </label>
+        <textarea type="text" name="bio" id="paramProfilBio" readonly value=""></textarea>
+  </div>
+    </div>
+    `
+    render(fil)
+}
+
 function changeProfilImage() {
     if (isNull(imgpdp)) {
         imgpdp = 'image/defaultimg.png'
@@ -808,6 +858,10 @@ function changeProfilImage() {
 
     document.querySelector('.imagepdpContainer').style.backgroundImage = `url("${imgpdp}");`
     console.log(document.querySelector('.imagepdpContainer'))
+}
+
+function updateImage(){
+
 }
 
 function setProfilImage() {
