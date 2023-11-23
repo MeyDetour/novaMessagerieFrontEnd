@@ -16,6 +16,21 @@
     /* font-weight: 300; */
     gap: 40px;
 }
+.navbarInterface2{
+    justify-content: flex-start;
+    background-color: var(--joyeux);
+    padding-left: 15px;
+    width: 100%;
+    flex-direction: row;
+    height: 10%;
+    border: 0;
+    position: absolute;
+    align-items: center;
+    left: 0%;
+    top: 0%;
+}
+
+
 .navbarInterface  .bi {
    font-size: 2.3em;
 }
@@ -30,8 +45,12 @@ li {
     text-decoration: none;
 }
 
-
-
+.joyeux{
+    color: var(--joyeux);
+}
+.white{
+    color: white;
+}
 
 
 .navbar__item-menu,.navbar__item {
@@ -51,7 +70,15 @@ li {
     flex-direction: column ;
 
 }
+.imagelogomenuNavbar{
+    display: none;
+    width: 24%;
 
+}
+.imagelogoNavbar{
+    width: 66%;
+
+}
 .navbar_bottom {
 
 
@@ -284,16 +311,29 @@ li {
     width: 80% ;
 }
 .burgernavbar {
-    font-size: 2.4em;
+    font-size: 1.4em;
     display: none;
 }
 .fermermenunavbar{
+
     font-size: 2.4em;
 }
 @media only screen and (max-width: 1048px) {
+    .cookie-consent-banner {
+
+        height: 41%;}
 .cookie-consent-banner__inner{
     padding: 32px 19px;
 }
+    .cookie-consent-banner__header {
+
+        font-size: 26px;}
+    .cookie-consent-banner__description {
+
+        font-size: 26px;}
+    .imagelogomenuNavbar{
+        display: block;
+    }
     .navbarInterface {
         justify-content: flex-start;
         padding-left: 15px;
@@ -302,6 +342,7 @@ li {
         height: 10%;
         border-radius: 0px 0px 20px 20px;
     }
+
 
     .convPrivéListe {
         display: none;

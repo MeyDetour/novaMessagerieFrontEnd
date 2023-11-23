@@ -43,6 +43,7 @@ background-size: cover;
 }
 .containerFond {
     width: 86%;
+    bottom: 0%;
     right: 0%;
     position: absolute;
     height: 100%;
@@ -172,6 +173,7 @@ background-size: cover;
 .error {
     color: red;
     font-size: 1.5em;
+    z-index: 1;
     font-weight: bolder;
 }
 .containerMessage{
@@ -432,6 +434,7 @@ background-size: cover;
 .messages {
     height: 90%;
     width: 100%;
+
     padding: 26px 15px 20px 20px;
     overflow-y: scroll;
     scrollbar-width: none;  /* Firefox */
@@ -571,7 +574,7 @@ background-size: cover;
     .containerFond {
         padding: 0%;
         width: 100%;
-        position: relative;
+
         height: 90%;
         /* Add your background pattern here */
 
@@ -588,13 +591,20 @@ background-size: cover;
         height: 100%;
 
     }
+.task{
+    padding: 3px 10px;
 
+    border-radius: 24px;
+}
     .postMessage {
         width: 100%;
         position: fixed;
         bottom: 0%;
     }
-
+.leftMessage {
+    justify-content: flex-start;
+    position: relative;
+    margin-left: 2px;}
     .loginform::before {
         position: absolute;
         content: "";
@@ -607,5 +617,8 @@ background-size: cover;
 
         border-radius: 30px;
         box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.082);
+    }
+    .donneSUp{
+        font-size: 14px;
     }
 }
