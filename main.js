@@ -32,20 +32,19 @@ let croix = null
 let menuBurger = null
 
 console.log(document.cookie)
-setTimeout(() => {
-    renderCoockie()
-    document.querySelector('#consentcoockie').addEventListener('click', () => {
-        run()
-    })
-    document.querySelector('#noconsentcookie').addEventListener('click', () => {
-        renderVide()
-    })
-}, 2200)
+// setTimeout(() => {
+//     renderCoockie()
+//     document.querySelector('#consentcoockie').addEventListener('click', () => {
+//         run()
+//     })
+//     document.querySelector('#noconsentcookie').addEventListener('click', () => {
+//         renderVide()
+//     })
+// }, 2200)
 
 
+run()
 function run() {
-    console.log('run')
-
     if (!token) {
         renderForm()
     } else {
@@ -82,7 +81,6 @@ function isNull(variable) {
     return variable === null
 }
 
-changeProfilImage()
 
 function isEmptyList(liste) {
     return liste.length === 0
@@ -221,7 +219,7 @@ async function register(name, mdpasse) {
                 mdpasse.value = ""
             } else {
                 document.querySelector('#signupForm').style.filter = ' drop-shadow(2px 4px 12px green)'
-                setTimeout(()=> {
+                setTimeout(() => {
                     nomUser = name.value
 
                     renderForm()
@@ -266,9 +264,9 @@ async function getToken(name, mdpasse) {
                 setTimeout(() => {
                     error.textContent = ""
                 }, 2000)
-                nom.value = ""
-                mdp.value = ""
-                nom.focus()
+
+                mdpasse.value = ""
+                mdpasse.focus()
             } else {
                 console.log(data)
                 console.log('token : ', data.token)
@@ -428,14 +426,14 @@ function renderMessage(listeMessage) {
     `
     render(fil)
 
-    //point B
 
+    for (let i=0; i < listeMessage.length; i++) {
 
-//point c
-    listeMessage.forEach((message) => {
-        addMessage(message)
+        let message = listeMessage[i]
+        logiqueMessage(message, i)
+
         addActions(message)
-    })
+    }
 
 
 }
@@ -466,12 +464,11 @@ async function getMessages() {
         })
 }
 
-function haveDisplayname(a){
+function haveDisplayname(a) {
 
-    if(isNull(a.displayName)){
+    if (isNull(a.displayName)) {
         return a.username
-    }
-    else {
+    } else {
         return a.displayName
     }
 
@@ -486,12 +483,39 @@ function identifier(mess) {
     return haveDisplayname(auteur)
 }
 
-function addMessage(message) {
-    const zoneMessage = document.querySelector('.messages')
+function logiqueMessage(message, indice){
 
-    let id = message.id
-    zoneMessage.innerHTML += `        
-        <div class="containerMessage containerMessage${id}">          
+    let messageATransmettre = message
+
+    if (typeof listemessage[indice-1] !== 'undefined') {
+        console.log(listemessage[indice-1])
+       if( messageATransmettre.author.username === listemessage[indice-1].author.username && differenceMoinsDe11Minutes(formatDate(messageATransmettre['createdAt']), formatDate(listemessage[indice-1]['createdAt']))) {
+           //if its not first message and precedent have same autho and message date less 11min
+           indice--
+           let messaageCourant = listemessage[indice]
+           console.log('message a concatainer :',messaageCourant.content )
+           while (listemessage[indice - 1].author.username === messageATransmettre.author.username && differenceMoinsDe11Minutes(formatDate(messageATransmettre['createdAt']), formatDate(messaageCourant['createdAt']))) {
+               indice--
+
+               messaageCourant = listemessage[indice]
+               console.log('message a concatainer :',messaageCourant.content )
+           }
+
+           document.querySelector(`.messageContenu${messaageCourant.id}`).innerHTML += `\n ${message.content} `
+           document.querySelector(`.id${messaageCourant.id}`).innerHTML += `,${messageATransmettre.id} `
+           addMessage(messageATransmettre,'d-none')
+       }
+       else {addMessage(messageATransmettre,'d-flex')}
+    }
+    else {addMessage(messageATransmettre,'d-flex')}
+
+}
+function addMessage(message ,display) {
+    let date =formatDate(message['createdAt'])
+let id = message.id
+        const zoneMessage = document.querySelector('.messages')
+        zoneMessage.innerHTML += `        
+        <div class="containerMessage containerMessage${id} ${display}">          
                               <div class="task ">
                                 <div class="tags">
                                   <button class="tag tag${id}">${identifier(message)}</button>
@@ -499,7 +523,7 @@ function addMessage(message) {
                                  
                                     </button>
                                 </div>
-                                <div >
+                                <div class=textareaMessage${id} >
                                <textarea readonly class='textareaMessage messageContenu${id}'>${message.content}</textarea>
 
                                 </div>
@@ -507,23 +531,50 @@ function addMessage(message) {
                                 <div class="stats">
                                   <div class="donneeSUp">
                                   
-                                    <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linecap="round" stroke-width="2" d="M12 8V12L15 15"></path> <circle stroke-width="2" r="9" cy="12" cx="12"></circle> </g></svg>${message['createdAt'].slice(0, 10)}</div>
+                                    <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linecap="round" stroke-width="2" d="M12 8V12L15 15"></path> <circle stroke-width="2" r="9" cy="12" cx="12"></circle> </g></svg>${date.jour}  ${date.heure}:${date.minutes}</div>
                                       <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M16 10H16.01M12 10H12.01M8 10H8.01M3 10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706 21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"></path> </g></svg>${message.responses.length}</div>
                                       <div><svg fill="#000000" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-2.5 0 32 32"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path fill="#000000" d="M0 10.284l0.505 0.36c0.089 0.064 0.92 0.621 2.604 0.621 0.27 0 0.55-0.015 0.836-0.044 3.752 4.346 6.411 7.472 7.060 8.299-1.227 2.735-1.42 5.808-0.537 8.686l0.256 0.834 7.63-7.631 8.309 8.309 0.742-0.742-8.309-8.309 7.631-7.631-0.834-0.255c-2.829-0.868-5.986-0.672-8.686 0.537-0.825-0.648-3.942-3.3-8.28-7.044 0.11-0.669 0.23-2.183-0.575-3.441l-0.352-0.549-8.001 8.001zM1.729 10.039l6.032-6.033c0.385 1.122 0.090 2.319 0.086 2.334l-0.080 0.314 0.245 0.214c7.409 6.398 8.631 7.39 8.992 7.546l-0.002 0.006 0.195 0.058 0.185-0.087c2.257-1.079 4.903-1.378 7.343-0.836l-13.482 13.481c-0.55-2.47-0.262-5.045 0.837-7.342l0.104-0.218-0.098-0.221-0.031 0.013c-0.322-0.632-1.831-2.38-7.498-8.944l-0.185-0.215-0.282 0.038c-0.338 0.045-0.668 0.069-0.981 0.069-0.595 0-1.053-0.083-1.38-0.176z"> </path> </g></svg>${message.reactions.length}</div>
                                   
-                                     <span class="">id : ${id}</span>  </div>
+                                     <span class=id${id}>id : ${id}</span>  </div>
                                   </div></div>  
                     `
 
 
+
 }
 
-function getRandomColor() {
-    let red = Math.floor(Math.random() * 256);
-    let green = Math.floor(Math.random() * 256);
-    let blue = Math.floor(Math.random() * 256);
-    return `rgb(${red}, ${green}, ${blue})`;
+function formatDate(inputDate) {
+    const dateObject = new Date(inputDate);
+
+    const jour = dateObject.getUTCDate();
+    const mois = dateObject.getUTCMonth() + 1; // Les mois vont de 0 à 11, donc ajouter 1
+    const annee = dateObject.getUTCFullYear();
+    const heure = dateObject.getUTCHours();
+    const minutes = dateObject.getUTCMinutes();
+
+    const resultat = {
+        jour: `${jour}/${mois}/${annee}`,
+        heure: heure,
+        minutes: minutes,
+    };
+    return resultat;
 }
+
+function differenceMoinsDe11Minutes(date1, date2) {
+
+    const heure1 = date1.heure;
+    const minutes1 = date1.minutes;
+
+    const heure2 = date2.heure;
+    const minutes2 = date2.minutes;
+
+    // Calculer la différence en minutes entre les deux heures
+    const differenceEnMinutes = Math.abs((heure1 * 60 + minutes1) - (heure2 * 60 + minutes2));
+
+    // Vérifier si la différence est de 11 minutes ou moins
+    return differenceEnMinutes <= 11;
+}
+
 
 // -----------------------------------------Envoyer
 
@@ -545,7 +596,6 @@ async function postMessage(message) {
         .then(response => response.json())
         .then(data => {
             //"ok"
-
 
 
         })
@@ -614,7 +664,7 @@ function addActions(message) {
 }
 
 function addActionEvent() {
- croix = document.querySelector('.fermermenunavbar')
+    croix = document.querySelector('.fermermenunavbar')
     homemresponsive = document.querySelector('.imagelogomenuNavbar')
     let home = document.querySelector('.imagelogoNavbar')
 
@@ -627,23 +677,23 @@ function addActionEvent() {
     let repondres = document.querySelectorAll('.repondre');
     let optProfil = document.querySelector('.imagepdpContainer')
 
-    optProfil.addEventListener('click',()=>{
+    optProfil.addEventListener('click', () => {
 
         let popoverOptProfil = document.querySelector('.popoverOptProfil')
         popoverOptProfil.classList.toggle('d-none')
 
     })
-    homemresponsive.addEventListener('click',()=>{
-    run()
-})
-    home.addEventListener('click',()=>{
+    homemresponsive.addEventListener('click', () => {
         run()
     })
-    if(window.innerWidth >1048 ){
+    home.addEventListener('click', () => {
+        run()
+    })
+    if (window.innerWidth > 1048) {
         messageAEnvoyer.focus()
     }
 
-    window.addEventListener('resize',()=>{
+    window.addEventListener('resize', () => {
 
         run()
     })
@@ -707,7 +757,8 @@ function addActionEvent() {
 
 
 function supprimerMessage(id) {
-
+    let containerAsupprimer = document.querySelector(`.containerMessage${id}`)
+    containerAsupprimer.classList.toggle('d-none')
     const supprimerParam =
         {
             method: 'DELETE',
@@ -718,7 +769,7 @@ function supprimerMessage(id) {
 
         }
     fetch(`${baseUrl}api/messages/delete/${id}`, supprimerParam).then(response => response.json()).then(data => {
-        run()
+
     })
 }
 
@@ -794,7 +845,7 @@ async function repondreMessaage(id) {
         })
 }
 
-// -----------------------------------------Modifier Message
+// -----------------------------------------token
 
 async function refreshToken() {
     console.log(freshener)
@@ -822,8 +873,8 @@ async function logout() {
 
 }
 
-// -----------------------------------------MENU NQVBQR
-function fermermenu(){
+// -----------------------------------------MENU menu navbar
+function fermermenu() {
     console.log("fermer")
     nav = document.querySelector('.navbarInterface2')
     switchNavbarInterface()
@@ -832,21 +883,24 @@ function fermermenu(){
 
     run()
 }
-function ouvrirmenu(){
+
+function ouvrirmenu() {
     nav = document.querySelector('.navbarInterface')
     renderResponsiveMenu()
     switchNavbarInterface()
     menuBurger.style.display = 'none'
     homemresponsive.style.display = 'none'
 }
-function switchNavbarInterface(){
+
+function switchNavbarInterface() {
     nav.classList.toggle('navbarInterface')
     nav.classList.toggle('navbarInterface2')
     croix.classList.toggle('d-none')
 }
+
 // -----------------------------------------Edit profil
-function renderEditProfil(){
-    let fil =`
+function renderEditProfil() {
+    let fil = `
  <div class="paramContainer  centered">
         <div class="paramcontenuEditProfil">
         <div class="optEditProfilImagePdp image"></div>
@@ -866,18 +920,18 @@ function renderEditProfil(){
     render(fil)
     verifyDpn(document.querySelector('#paramDisplayName'))
 }
-function verifyDpn(input){
 
-    input.addEventListener('keydown',(e)=>{
+function verifyDpn(input) {
+
+    input.addEventListener('keydown', (e) => {
         console.log(input.value)
-        if(e.key === 'Enter'){
-            if( isNotEmpty(input.value) && input.value.length > 2){
+        if (e.key === 'Enter') {
+            if (isNotEmpty(input.value) && input.value.length > 2) {
                 input.blur()
                 dpnUser = input.value
                 editDisplayName(input.value)
 
-            }
-            else{
+            } else {
                 input.value = null
             }
 
@@ -885,6 +939,7 @@ function verifyDpn(input){
     })
 
 }
+
 function changeProfilImage() {
     if (isNull(imgpdp)) {
         imgpdp = 'image/defaultimg.png'
@@ -894,7 +949,7 @@ function changeProfilImage() {
     console.log(document.querySelector('.imagepdpContainer'))
 }
 
-function updateImage(){
+function updateImage() {
 
 }
 

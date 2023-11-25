@@ -478,20 +478,13 @@ background-size: cover;
 .messages {
     height: 90%;
     width: 100%;
-
+overflow-x: hidden;
     padding: 26px 15px 20px 20px;
     overflow-y: scroll;
-    scrollbar-width: none;  /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
 }
-/* Hiding scrollbar for Chrome, Safari and Opera */
-.messages::-webkit-scrollbar {
-    display: none;
-}
-
 
 .postMessage {
-    width: 100%;
+    width: 86%;
     height: 10%;
     position: fixed;
 
