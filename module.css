@@ -52,7 +52,7 @@ li {
     color: white;
 }
 
-
+/*================================navbar ================*/
 .navbar__item-menu,.navbar__item {
     display: flex;
     align-items: center;
@@ -97,6 +97,8 @@ li {
     width: 63px;
     height: 63px;
 }
+
+/*================================liste conv prive================*/
 
 .convPrivéListe ,.convPrivéListe2{
     background: linear-gradient(to top, #85858536, transparent 25%);
