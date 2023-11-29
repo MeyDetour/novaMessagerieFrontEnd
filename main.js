@@ -31,19 +31,17 @@ let mdpsignup = ""
 let croix = null
 let menuBurger = null
 
-console.log(document.cookie)
-// setTimeout(() => {
-//     renderCoockie()
-//     document.querySelector('#consentcoockie').addEventListener('click', () => {
-//         run()
-//     })
-//     document.querySelector('#noconsentcookie').addEventListener('click', () => {
-//         renderVide()
-//     })
-// }, 2200)
+setTimeout(() => {
+    renderCoockie()
+    document.querySelector('#consentcoockie').addEventListener('click', () => {
+        run()
+    })
+    document.querySelector('#noconsentcookie').addEventListener('click', () => {
+        renderVide()
+    })
+}, 2200)
 
 
-run()
 function run() {
     if (!token) {
         renderForm()
@@ -200,8 +198,6 @@ async function register(name, mdpasse) {
         .then(response => response.json())
         .then(data => {
 
-
-            console.log(data)
             if (data === "username already taken" || data === "try with 6+ chars for password") {
                 if (data === "try with 6+ chars for password") {
                     error2.textContent = 'Il vous faaut un mot de passe de +6 caractere ! :)'
@@ -268,7 +264,7 @@ async function getToken(name, mdpasse) {
                 mdpasse.value = ""
                 mdpasse.focus()
             } else {
-                console.log(data)
+
                 console.log('token : ', data.token)
                 token = data.token
                 nomUser = name.value
@@ -427,7 +423,7 @@ function renderMessage(listeMessage) {
     render(fil)
 
 
-    for (let i=0; i < listeMessage.length; i++) {
+    for (let i = 0; i < listeMessage.length; i++) {
 
         let message = listeMessage[i]
         logiqueMessage(message, i)
@@ -483,38 +479,41 @@ function identifier(mess) {
     return haveDisplayname(auteur)
 }
 
-function logiqueMessage(message, indice){
+function logiqueMessage(message, indice) {
 
     let messageATransmettre = message
 
-    if (typeof listemessage[indice-1] !== 'undefined') {
-        console.log(listemessage[indice-1])
-       if( messageATransmettre.author.username === listemessage[indice-1].author.username && differenceMoinsDe11Minutes(formatDate(messageATransmettre['createdAt']), formatDate(listemessage[indice-1]['createdAt']))) {
-           //if its not first message and precedent have same autho and message date less 11min
-           indice--
-           let messaageCourant = listemessage[indice]
-           console.log('message a concatainer :',messaageCourant.content )
-           while (listemessage[indice - 1].author.username === messageATransmettre.author.username && differenceMoinsDe11Minutes(formatDate(messageATransmettre['createdAt']), formatDate(messaageCourant['createdAt']))) {
-               indice--
+    if (typeof listemessage[indice - 1] !== 'undefined') {
 
-               messaageCourant = listemessage[indice]
-               console.log('message a concatainer :',messaageCourant.content )
-           }
+        if (messageATransmettre.author.username === listemessage[indice - 1].author.username && differenceMoinsDe11Minutes(formatDate(messageATransmettre['createdAt']), formatDate(listemessage[indice - 1]['createdAt']))) {
+            //if its not first message and precedent have same autho and message date less 11min
+            indice--
+            let messaageCourant = listemessage[indice]
 
-           document.querySelector(`.messageContenu${messaageCourant.id}`).innerHTML += `\n ${message.content} `
-           document.querySelector(`.id${messaageCourant.id}`).innerHTML += `,${messageATransmettre.id} `
-           addMessage(messageATransmettre,'d-none')
-       }
-       else {addMessage(messageATransmettre,'d-flex')}
+            while (listemessage[indice - 1].author.username === messageATransmettre.author.username && differenceMoinsDe11Minutes(formatDate(messageATransmettre['createdAt']), formatDate(messaageCourant['createdAt']))) {
+                indice--
+
+                messaageCourant = listemessage[indice]
+
+            }
+
+            document.querySelector(`.messageContenu${messaageCourant.id}`).innerHTML += `\n ${message.content} `
+            document.querySelector(`.id${messaageCourant.id}`).innerHTML += `,${messageATransmettre.id} `
+            addMessage(messageATransmettre, 'd-none')
+        } else {
+            addMessage(messageATransmettre, 'd-flex')
+        }
+    } else {
+        addMessage(messageATransmettre, 'd-flex')
     }
-    else {addMessage(messageATransmettre,'d-flex')}
 
 }
-function addMessage(message ,display) {
-    let date =formatDate(message['createdAt'])
-let id = message.id
-        const zoneMessage = document.querySelector('.messages')
-        zoneMessage.innerHTML += `        
+
+function addMessage(message, display) {
+    let date = formatDate(message['createdAt'])
+    let id = message.id
+    const zoneMessage = document.querySelector('.messages')
+    zoneMessage.innerHTML += `        
         <div class="containerMessage containerMessage${id} ${display}">          
                               <div class="task ">
                                 <div class="tags">
@@ -538,7 +537,6 @@ let id = message.id
                                      <span class=id${id}>id : ${id}</span>  </div>
                                   </div></div>  
                     `
-
 
 
 }
@@ -800,14 +798,13 @@ async function fetchModifier(nvCOntenu, id) {
     await fetch(`${baseUrl}api/messages/${id}/edit`, param)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
 
             run();
         });
 }
 
 async function reactionMessage(id) {
-    console.log(id)
+
     const messengerReact =
         {
             method: 'GET',
@@ -819,13 +816,13 @@ async function reactionMessage(id) {
     await fetch(`${baseUrl}api/reaction/message/${id}/lol`, messengerReact)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+
             run()
         })
 }
 
 async function repondreMessaage(id) {
-    console.log(id)
+
     const messengerReact =
         {
             method: 'POST',
@@ -840,7 +837,7 @@ async function repondreMessaage(id) {
     await fetch(`${baseUrl}api/responses/${id}/new`, messengerReact)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+
             run()
         })
 }
@@ -848,7 +845,7 @@ async function repondreMessaage(id) {
 // -----------------------------------------token
 
 async function refreshToken() {
-    console.log(freshener)
+
     const freshParam =
         {
             method: 'POST',
@@ -862,7 +859,7 @@ async function refreshToken() {
         .then(data => {
             token = data.token
             freshener = data.freshener
-            console.log(data)
+
 
             run()
         })
@@ -875,7 +872,7 @@ async function logout() {
 
 // -----------------------------------------MENU menu navbar
 function fermermenu() {
-    console.log("fermer")
+
     nav = document.querySelector('.navbarInterface2')
     switchNavbarInterface()
     menuBurger.style.display = 'block'
@@ -903,7 +900,12 @@ function renderEditProfil() {
     let fil = `
  <div class="paramContainer  centered">
         <div class="paramcontenuEditProfil">
-        <div class="optEditProfilImagePdp image"></div>
+            <div class="centered flex-column">      
+              <div class="optEditProfilImagePdp image"></div>
+            <input type="file" class="inputImgPdp">
+            </div>
+    
+    
             <div class="editProfil">
                 <label for="paramDisplayName">Nom d'affichage :  </label>
                 <input type="text" name="displayname" id="paramDisplayName"  value="">
@@ -919,12 +921,14 @@ function renderEditProfil() {
     `
     render(fil)
     verifyDpn(document.querySelector('#paramDisplayName'))
+
+
 }
 
 function verifyDpn(input) {
 
     input.addEventListener('keydown', (e) => {
-        console.log(input.value)
+
         if (e.key === 'Enter') {
             if (isNotEmpty(input.value) && input.value.length > 2) {
                 input.blur()
@@ -954,18 +958,19 @@ function updateImage() {
 }
 
 function setProfilImage() {
+    const formData = new FormData()
+    formData.append('profilepic', imgpdp)
+
     const param =
         {
             method: 'POST',
             headers: {
-                'Content-type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({
-                "displayName": 'MeïMeï'
-            })
-
+            body: formData,
         }
+
+
     fetch(`${baseUrl}api/profilepicture`, param).then(response => response.json())
         .then(data => {
             console.log(data)
