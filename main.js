@@ -15,6 +15,7 @@ let ancien_token = null
 let freshener = ""
 let token = ancien_token
 let imgpdp = null
+let inputimg = null
 let nav = ""
 let error2 = ""
 let error = ""
@@ -899,10 +900,11 @@ function switchNavbarInterface() {
 function renderEditProfil() {
     let fil = `
  <div class="paramContainer  centered">
+            <button class="boutonSauvegarder sauvegarderEditProfile" onclick="updateProfil()">Sauvegardez ! </button>
         <div class="paramcontenuEditProfil">
             <div class="centered flex-column">      
               <div class="optEditProfilImagePdp image"></div>
-            <input type="file" class="inputImgPdp">
+            <input type="file" class="inputImgPdp" accept="image/*">
             </div>
     
     
@@ -920,46 +922,59 @@ function renderEditProfil() {
     </div>
     `
     render(fil)
+
+    inputimg = document.querySelector('.inputImgPdp')
     verifyDpn(document.querySelector('#paramDisplayName'))
+    inputimg.addEventListener('change',()=>{
+        imgpdp = inputimg.value
+        console.log(imgpdp)
+        changeProfilImage(imgpdp)
+  })
+
 
 
 }
+function updateProfil (dpn){
+    if(inputimg.files.length>0){
+        let file = inputimg.files[0]
+        imgpdp = file
+        console.log(file)
+        setProfilImage(file)
+    }
+    if()
+        if (isNotEmpty(input.value) && input.value.length > 2) {
+            input.blur()
+            dpnUser = input.value
+            editDisplayName(input.value)
 
-function verifyDpn(input) {
-
-    input.addEventListener('keydown', (e) => {
-
-        if (e.key === 'Enter') {
-            if (isNotEmpty(input.value) && input.value.length > 2) {
-                input.blur()
-                dpnUser = input.value
-                editDisplayName(input.value)
-
-            } else {
-                input.value = null
-            }
-
+        } else {
+            input.value = null
         }
-    })
 
 }
 
-function changeProfilImage() {
+
+function changeProfilImage(image) {
+    console.log(image)
     if (isNull(imgpdp)) {
-        imgpdp = 'image/defaultimg.png'
+        imgpdp = image
+    }
+else    {
+
+    document.querySelector('.optEditProfilImagePdp').style.backgroundImage = `url("${image}");`
+        console.log( document.querySelector('.optEditProfilImagePdp'))
+       imgpdp = image
     }
 
-    document.querySelector('.imagepdpContainer').style.backgroundImage = `url("${imgpdp}");`
-    console.log(document.querySelector('.imagepdpContainer'))
 }
 
 function updateImage() {
 
 }
 
-function setProfilImage() {
+function setProfilImage(file) {
     const formData = new FormData()
-    formData.append('profilepic', imgpdp)
+    formData.append('profilepic', file)
 
     const param =
         {

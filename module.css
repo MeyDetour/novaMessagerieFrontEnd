@@ -256,6 +256,7 @@ li {
 /*================================parametre option profil ================*/
 .paramContainer{
     width: 80%;
+    position: relative;
     height: 90%;
     background: white;
     border-radius: 50px;
@@ -315,13 +316,18 @@ input[type="file"]:hover::before {
     width: 56%;
     height: 20%;
 }
-#paramDisplayName, #paramUsername , #paramProfilBio{
+#paramDisplayName, #paramUsername , #paramProfilBio ,input[type="file"]::before  ,.boutonSauvegarder {
+
     border-radius: 20px;
     border: 2px lightgray solid;
     padding: 0px 15px;
     box-shadow: 5px 5px 0px var(--joyeux);
 }
-
+.boutonSauvegarder{
+    position: absolute;
+    right: 4%;
+    bottom: 4%;
+}
 /*================================Menu ================*/
 .menunavbar {
     width: 100%;
