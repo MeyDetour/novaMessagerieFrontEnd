@@ -900,7 +900,7 @@ function switchNavbarInterface() {
 function renderEditProfil() {
     let fil = `
  <div class="paramContainer  centered">
-            <button class="boutonSauvegarder sauvegarderEditProfile" onclick="updateProfil()">Sauvegardez ! </button>
+            <button class="boutonSauvegarder sauvegarderEditProfile" onclick="">Sauvegardez ! </button>
         <div class="paramcontenuEditProfil">
             <div class="centered flex-column">      
               <div class="optEditProfilImagePdp image"></div>
@@ -910,7 +910,7 @@ function renderEditProfil() {
     
             <div class="editProfil">
                 <label for="paramDisplayName">Nom d'affichage :  </label>
-                <input type="text" name="displayname" id="paramDisplayName"  value="">
+                <input type="text" name="displayname" id="paramDisplayName"  value="${dpnUser}">
                 <label for="paramUsername">Nom d'utilisateur : ${nomUser}  </label>
             
             </div>
@@ -924,53 +924,66 @@ function renderEditProfil() {
     render(fil)
 
     inputimg = document.querySelector('.inputImgPdp')
-    verifyDpn(document.querySelector('#paramDisplayName'))
-    inputimg.addEventListener('change',()=>{
+    console.log(inputimg)
+    console.log(inputimg.files)
+    document.querySelector('.sauvegarderEditProfile').addEventListener('click',()=>{
+        updateProfil(dpnUser)
+
+    })
+    inputimg.addEventListener('change', () => {
+        console.log(inputimg)
+        console.log(inputimg.files)
         imgpdp = inputimg.value
         console.log(imgpdp)
         changeProfilImage(imgpdp)
-  })
-
+    })
 
 
 }
-function updateProfil (dpn){
-    if(inputimg.files.length>0){
+
+function updateProfil(dpn) {
+    if (inputimg.files.length > 0) {
         let file = inputimg.files[0]
         imgpdp = file
         console.log(file)
         setProfilImage(file)
     }
-    if()
-        if (isNotEmpty(input.value) && input.value.length > 2) {
-            input.blur()
-            dpnUser = input.value
-            editDisplayName(input.value)
 
-        } else {
-            input.value = null
-        }
+    if (isNotEmpty(dpn.value) && dpn.value.length > 2) {
+        dpn.blur()
+        dpnUser = dpn.value
+        editDisplayName(dpn.value)
+
+    } else {
+        dpn.value = null
+    }
 
 }
-
 
 function changeProfilImage(image) {
-    console.log(image)
-    if (isNull(imgpdp)) {
-        imgpdp = image
-    }
-else    {
+    console.log(image);
 
-    document.querySelector('.optEditProfilImagePdp').style.backgroundImage = `url("${image}");`
-        console.log( document.querySelector('.optEditProfilImagePdp'))
-       imgpdp = image
-    }
+    // Vérifiez si l'image est nulle ou vide (ajustez selon votre besoin)
+    if (!isNull(image)) {
 
+        // Sélectionnez l'élément avec la classe .optEditProfilImagePdp
+        const profileImageElement = document.querySelector('.optEditProfilImagePdp');
+
+        // Assurez-vous que l'élément existe avant de tenter de le modifier
+        if (profileImageElement) {
+            // Définissez l'image en tant que fond
+            profileImageElement.style.backgroundImage = `url("${image}")`;
+            // Ajoutez d'autres propriétés de style au besoin
+            profileImageElement.style.backgroundSize = 'cover';
+            profileImageElement.style.backgroundPosition = 'center';
+            // ...
+
+            // Mettez à jour la variable imgpdp si nécessaire
+            imgpdp = image;
+        }
+    }
 }
 
-function updateImage() {
-
-}
 
 function setProfilImage(file) {
     const formData = new FormData()
@@ -989,6 +1002,7 @@ function setProfilImage(file) {
     fetch(`${baseUrl}api/profilepicture`, param).then(response => response.json())
         .then(data => {
             console.log(data)
+            updateProfil(dpnUser)
         })
 
 }
