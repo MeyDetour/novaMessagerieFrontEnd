@@ -270,7 +270,6 @@ li {
     width: 250px;
     height: 250px;
     border-radius: 50%;
-    background-image: url(image/defaultimg.png);
 }
 input[type="file"] {
     border: none;

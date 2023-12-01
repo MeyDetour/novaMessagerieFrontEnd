@@ -11,10 +11,13 @@ addStyleRule('.centered', `display :flex ; justify-content : center ; align-item
 
 
 //=======================================================================
-let ancien_token = null
+
+let token = null
 let freshener = ""
-let token = ancien_token
-let imgpdp = null
+
+let user = null //OBJECT USER ( id , username,displayName,image(imageName),imageUrl,thumbImageUrl
+
+
 let inputimg = null
 let nav = ""
 let error2 = ""
@@ -23,12 +26,10 @@ let error = ""
 //formulaire acceptation coockie
 let content = document.querySelector('.containerFond')
 const baseUrl = "https://b1messenger.imatrythis.com/"
-let nomUser = ""
+
 let dpnUser = "" // display name user
 let homemresponsive = null
 let listemessage = ""
-let nomsignup = ""
-let mdpsignup = ""
 let croix = null
 let menuBurger = null
 
@@ -58,21 +59,20 @@ function run() {
 
 }
 
-function scrollY() {
-    const filD = document.querySelector('.messages')
-    filD.scrollTo(0, filD.scrollHeight);
-}
-
 function render(contenu) {
     content.innerHTML = ""
     content.innerHTML = contenu
 
 }
 
+function scrollY() {
+    const filD = document.querySelector('.messages')
+    filD.scrollTo(0, filD.scrollHeight);
+}
+
 function isNotEmpty(message) {
 // trim() enleve les espaacesinutile de la chaine de caractere donc si le message est rempli d'espace la fonction les enleve
     // return true si elle n'est pas vide
-
     return message.trim() !== ''
 }
 
@@ -85,10 +85,7 @@ function isEmptyList(liste) {
     return liste.length === 0
 }
 
-
 // -----------------------------------------Formulaire
-
-
 function renderForm() {
     let form = `
     <div class="loginform">
@@ -109,7 +106,7 @@ function renderForm() {
         </div>
         <button id="buttonLogin">Submit</button>
         <span class="error"></span>
-        <a class="loginpage" id="signup" href="#">Signup</a>
+        <a class="loginpage" onclick="renderSignup()" id="signup" href="#">Signup</a>
         <a class="forgotLink" id="forgotmdp" href="#">Forgot your password?</a>
     </div>
     `
@@ -117,7 +114,7 @@ function renderForm() {
 
     error = document.querySelector('.error')
     const buttonLogin = document.querySelector('#buttonLogin')
-    const signup = document.querySelector('#signup')
+
     let nom = document.querySelector('#username')
     let mdp = document.querySelector('#password')
     nom.focus()
@@ -125,7 +122,6 @@ function renderForm() {
         if (e.key === 'Enter') {
             mdp.focus()
         }
-
     })
 
     mdp.addEventListener('keypress', (e) => {
@@ -133,19 +129,13 @@ function renderForm() {
             getToken(nom, mdp).then(response => {
                 buttonLogin.classList.toggle('d-none')
             })
-
         }
-
     })
-
-    signup.addEventListener('click', () => {
-        renderSignup()
-    })
-
     buttonLogin.addEventListener('click', () => {
         getToken(nom, mdp)
 
     })
+
 
 }
 
@@ -153,9 +143,14 @@ function renderForm() {
 
 function renderSignup() {
     let form = `
- <div class="card" id="signupForm">
+        <div class="card" id="signupForm">
         <h4 class="title">Sign up!</h4>
-
+        <div class="field">
+            <svg class="input-icon" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <path d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1c-27.64 140.9 68.65 266.2 199.1 285.1c19.01 2.888 36.17-12.26 36.17-31.49l.0001-.6631c0-15.74-11.44-28.88-26.84-31.24c-84.35-12.98-149.2-86.13-149.2-174.2c0-102.9 88.61-185.5 193.4-175.4c91.54 8.869 158.6 91.25 158.6 183.2l0 16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98 .0036c-7.299 0-13.2 4.992-15.12 11.68c-24.85-12.15-54.24-16.38-86.06-5.106c-38.75 13.73-68.12 48.91-73.72 89.64c-9.483 69.01 43.81 128 110.9 128c26.44 0 50.43-9.544 69.59-24.88c24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3C495.1 107.1 361.2-9.332 207.8 20.73zM239.1 304.3c-26.47 0-48-21.56-48-48.05s21.53-48.05 48-48.05s48 21.56 48 48.05S266.5 304.3 239.1 304.3z"></path>
+            </svg>
+            <input autocomplete="off" id="displaynamesignup" placeholder="Nom d'affichage" class="input-field" name="logemail" type="text">
+        </div>
         <div class="field">
             <svg class="input-icon" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
                 <path d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1c-27.64 140.9 68.65 266.2 199.1 285.1c19.01 2.888 36.17-12.26 36.17-31.49l.0001-.6631c0-15.74-11.44-28.88-26.84-31.24c-84.35-12.98-149.2-86.13-149.2-174.2c0-102.9 88.61-185.5 193.4-175.4c91.54 8.869 158.6 91.25 158.6 183.2l0 16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98 .0036c-7.299 0-13.2 4.992-15.12 11.68c-24.85-12.15-54.24-16.38-86.06-5.106c-38.75 13.73-68.12 48.91-73.72 89.64c-9.483 69.01 43.81 128 110.9 128c26.44 0 50.43-9.544 69.59-24.88c24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3C495.1 107.1 361.2-9.332 207.8 20.73zM239.1 304.3c-26.47 0-48-21.56-48-48.05s21.53-48.05 48-48.05s48 21.56 48 48.05S266.5 304.3 239.1 304.3z"></path>
@@ -172,26 +167,24 @@ function renderSignup() {
         </div>
                   <span class="error2"></span>
         <button class="btn submitsignup" type="submit">Sign up</button>
-
-      <a  id="loginfromsignup" href="#">Login</a>
+         <a id="loginfromsignup" onclick="renderForm()" href="#">Login</a>
     </div>
 `
     render(form)
     error2 = document.querySelector('.error2')
-    let submitsignup = document.querySelector('.submitsignup')
-    let btnlogin = document.querySelector('#loginfromsignup')
-    nomsignup = document.querySelector('#usernamesignup')
-    mdpsignup = document.querySelector('#mdpsignup')
-
-    submitsignup.addEventListener('click', () => {
-        register(nomsignup, mdpsignup)
+    let username = document.querySelector('#usernamesignup')
+    let mdp = document.querySelector('#mdpsignup')
+    let dpn = document.querySelector('#displaynamesignup')
+    document.querySelector('.submitsignup').addEventListener('click', () => {
+        if(!isNull(username) && !isNull(mdp)){
+            if(isNull(dpn)){
+                dpn = username
+            }
+            editDisplayName(dpn)
+            register(username,mdp)
+            mdp = ''
+        }
     })
-
-    btnlogin.addEventListener('click', () => {
-        renderForm()
-    })
-
-
 }
 
 async function register(name, mdpasse) {
@@ -214,68 +207,77 @@ async function register(name, mdpasse) {
                 }
                 name.value = ""
                 mdpasse.value = ""
+                name.focus()
             } else {
                 document.querySelector('#signupForm').style.filter = ' drop-shadow(2px 4px 12px green)'
                 setTimeout(() => {
-                    nomUser = name.value
-
-                    renderForm()
+                     renderForm()
                 }, 1000)
-
-
             }
-
-
         })
 }
 
 
-// -----------------------------------------Obtenir Token
+// -----------------------------------------Connexion
 
 function profilParametreFetch(name, mdpasse) {
     const utilisateur = {
         username: name.value,
         password: mdpasse.value,
     }
-    const messengerLogin =
+    const param =
         {
             method: 'POST',
             headers: {'Content-type': 'application/json'},
             body: JSON.stringify(utilisateur)
         }
-    return messengerLogin
+    return param
 }
 
+//obtien token et user
 async function getToken(name, mdpasse) {
-
-    //login
     return await fetch(`${baseUrl}login`, profilParametreFetch(name, mdpasse))
         .then(response => response.json())
         .then(data => {
-            //data = token
-            //mauvais pseudo&mdp
-
             if (data.message === "Invalid credentials.") {
-
                 error.textContent = 'Erreur ! Veuillez réessayer merci :)'
                 setTimeout(() => {
                     error.textContent = ""
                 }, 2000)
-
                 mdpasse.value = ""
                 mdpasse.focus()
             } else {
-
-                console.log('token : ', data.token)
                 token = data.token
-                nomUser = name.value
-
-                setCookie("token", token, 30);
+                // setCookie("token", token, 30);
                 freshener = data.freshener
+                getObjectUser().then(response=>{
+                    console.log(user)
+                    if(isNull(user.displayName)){
+                        editDisplayName(user.username)
+                    }
+                    if(isNull(user.image)){
+                        setProfilImage('image/defaultimg.png')
+                    }
+                    run()
+                })
 
-                run()
-                //stocker dans les cookies
+
             }
+        })
+}
+async function getObjectUser() {
+    const param = {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        }
+    }
+    return await fetch(`${baseUrl}api/whoami`, param)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            user = data
         })
 }
 
@@ -293,53 +295,67 @@ function renderInterface() {
     if (navbar.classList.contains('d-none')) {
         navbar.classList.remove('d-none')
     }
+    getObjectUser().then(response=>{
+        navbar.innerHTML =
+            `
+            <div class="d-flex flex-row  justify-content-between">
+                <a href="#" class="btn-opt-navbar joyeux burgernavbar "><i class=" bi bi-list"></i></a>
+                <a href="#" class="btn-opt-navbar white "><i class="d-none fermermenunavbar bi bi-x-lg"></i></a>
+                <img src="image/logo.png" alt="logoNova" class="  imagelogomenuNavbar"></div>
+            </div>
+            <div class="navbar__item   ">
+                <img src="image/logo.png" alt="logoNova" class="imagelogoNavbar"></div>
+            <div class=" convPrivéListe">
+                <a href="#" class="btn-opt-navbar"></a>
+            </div>
+            
+            <div class="navbar__item">
+         
+                <div class="">
+                    <img src="${user.thumbImageUrl}" alt="Photo de profil" class="imagepdpContainer image" id="profileImage">
+                    <div class="popoverOptProfil d-none centered" id="dropdownOptions">
+                        <span class="popoverOption">Statut</span>
+                        <span class="popoverOption" onclick="renderEditProfil()">Edit Profil</span>
+                        <span class="">Deconnexion</span>
+                    </div>
+                </div>
+                <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
+            
+            </div>`}
+    ).then(a=>{
+        document.querySelector('#profileImage').addEventListener('click', () => {
+            document.querySelector('#dropdownOptions').classList.toggle('d-none')
 
-    navbar.innerHTML =
-        `
-<div class="d-flex flex-row  justify-content-between">
-  <a href="#" class="btn-opt-navbar joyeux burgernavbar "><i class=" bi bi-list"></i></a>
-  <a href="#" class="btn-opt-navbar white "><i class="d-none fermermenunavbar bi bi-x-lg"></i></a>
- <img src="image/logo.png" alt="logoNova" class="  imagelogomenuNavbar"></div>
-   </div>
-    <div class="navbar__item   ">
-    <img src="image/logo.png" alt="logoNova" class="imagelogoNavbar"></div>
-    <div class=" convPrivéListe">
-        <a href="#" class="btn-opt-navbar"></a>
-    </div>
-  
-    <div class="navbar__item">
-            <div class="imagepdpContainer image" ><div class="popoverOptProfil d-none  centered">
-                <span class="popoverOption ">Statut</span>   
-                  <span class="popoverOption" onclick="renderEditProfil()">Edit Profil</span> 
-                    <span class="  ">Deconnexion</span> 
-                
-                    </div></div> 
-        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
+        })
 
-</div>`
+    })
+
+
+
+
+
 
 }
 
 function renderResponsiveMenu() {
     let cont = `
-<div class="menunavbar">
-<div class="asidemenu centered"> 
-    <div class="navbar__item-menu   ">
-    
-        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-house-door"></i></a>
-  
-        <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-chat-left"></i></a>
-    </div>
-        <div class="navbar__item-menu">
-            <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
-             <div class="imagepdpContainer2 image"></div>  
-            </div>  
-     </div>
-       <div class=" convPrivéListe2">
-        <a href="#" class="btn-opt-navbar"></a>
-    </div>
-</div>
-`
+        <div class="menunavbar">
+        <div class="asidemenu centered"> 
+            <div class="navbar__item-menu   ">
+            
+                <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-house-door"></i></a>
+          
+                <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-chat-left"></i></a>
+            </div>
+                <div class="navbar__item-menu">
+                    <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
+                     <div class="imagepdpContainer2 image"></div>  
+                    </div>  
+             </div>
+               <div class=" convPrivéListe2">
+                <a href="#" class="btn-opt-navbar"></a>
+            </div>
+        </div>`
     render(cont)
 }
 
@@ -410,12 +426,9 @@ function renderMessage(listeMessage) {
     let fil = `
       <div class="filDiscussion">
         <div class="messages">
-
         </div>
         <div class="postMessage">
           <textarea title="Write Message" tabindex="1" placeholder="Message.." class="msgInput"></textarea>
-        
-
             <i class="bi bi-send sendBtn"></i>
             <i class="bi bi-arrow-clockwise refreshBtn"></i>
         </div>
@@ -423,12 +436,9 @@ function renderMessage(listeMessage) {
     `
     render(fil)
 
-
     for (let i = 0; i < listeMessage.length; i++) {
-
         let message = listeMessage[i]
         logiqueMessage(message, i)
-
         addActions(message)
     }
 
@@ -461,23 +471,12 @@ async function getMessages() {
         })
 }
 
-function haveDisplayname(a) {
-
-    if (isNull(a.displayName)) {
-        return a.username
-    } else {
-        return a.displayName
-    }
-
-}
-
 function identifier(mess) {
     let auteur = mess.author
-
-    if (nomUser === auteur.username) {
-        return ` Vous : ${haveDisplayname(auteur)}`
+    if (user.username === auteur.username) {
+        return ` Vous : ${auteur.displayName}`
     }
-    return haveDisplayname(auteur)
+    return auteur.displayName
 }
 
 function logiqueMessage(message, indice) {
@@ -592,12 +591,7 @@ async function postMessage(message) {
         }
 
     await fetch(`${baseUrl}api/messages/new`, messengerMessage)
-        .then(response => response.json())
-        .then(data => {
-            //"ok"
 
-
-        })
 }
 
 // -----------------------------------------Modifier Message par  raccourci et event
@@ -645,7 +639,7 @@ function addActions(message) {
     //  console.log(message.reactions.length,message.responses.length)
     let containermessage = document.querySelector(`.containerMessage${id}`)
 
-    if (message.author.username === nomUser) {
+    if (message.author.username === user.username) {
         containermessage.classList.add('rightMessage')
         document.querySelector(`.option${id}`).innerHTML += `
                <div class="poubelle" id=${id}> <i class="bi bi-trash"></i></div>
@@ -674,14 +668,7 @@ function addActionEvent() {
     let crayons = document.querySelectorAll('.crayon');
     let reactions = document.querySelectorAll('.reaction');
     let repondres = document.querySelectorAll('.repondre');
-    let optProfil = document.querySelector('.imagepdpContainer')
 
-    optProfil.addEventListener('click', () => {
-
-        let popoverOptProfil = document.querySelector('.popoverOptProfil')
-        popoverOptProfil.classList.toggle('d-none')
-
-    })
     homemresponsive.addEventListener('click', () => {
         run()
     })
@@ -745,7 +732,6 @@ function addActionEvent() {
         });
     });
     document.querySelectorAll(".textareaMessage").forEach((textarea) => {
-        textarea.style.height = "1px";
         textarea.style.height = (1 + textarea.scrollHeight) + "px";
 
     })
@@ -768,7 +754,6 @@ function supprimerMessage(id) {
 
         }
     fetch(`${baseUrl}api/messages/delete/${id}`, supprimerParam).then(response => response.json()).then(data => {
-
     })
 }
 
@@ -777,10 +762,7 @@ function modifierMessage(id) {
     message.readOnly = false;
     message.classList.toggle('textareamodify')
     message.addEventListener('keydown', (e) => {
-
         modifierInnerMessage(e, message, 'b', id)
-
-
     })
 }
 
@@ -799,13 +781,11 @@ async function fetchModifier(nvCOntenu, id) {
     await fetch(`${baseUrl}api/messages/${id}/edit`, param)
         .then(response => response.json())
         .then(data => {
-
             run();
         });
 }
 
 async function reactionMessage(id) {
-
     const messengerReact =
         {
             method: 'GET',
@@ -817,13 +797,11 @@ async function reactionMessage(id) {
     await fetch(`${baseUrl}api/reaction/message/${id}/lol`, messengerReact)
         .then(response => response.json())
         .then(data => {
-
             run()
         })
 }
 
 async function repondreMessaage(id) {
-
     const messengerReact =
         {
             method: 'POST',
@@ -838,7 +816,6 @@ async function repondreMessaage(id) {
     await fetch(`${baseUrl}api/responses/${id}/new`, messengerReact)
         .then(response => response.json())
         .then(data => {
-
             run()
         })
 }
@@ -846,7 +823,6 @@ async function repondreMessaage(id) {
 // -----------------------------------------token
 
 async function refreshToken() {
-
     const freshParam =
         {
             method: 'POST',
@@ -860,8 +836,6 @@ async function refreshToken() {
         .then(data => {
             token = data.token
             freshener = data.freshener
-
-
             run()
         })
 
@@ -878,7 +852,6 @@ function fermermenu() {
     switchNavbarInterface()
     menuBurger.style.display = 'block'
     homemresponsive.style.display = 'block'
-
     run()
 }
 
@@ -898,97 +871,54 @@ function switchNavbarInterface() {
 
 // -----------------------------------------Edit profil
 function renderEditProfil() {
-    let fil = `
- <div class="paramContainer  centered">
-            <button class="boutonSauvegarder sauvegarderEditProfile" onclick="">Sauvegardez ! </button>
-        <div class="paramcontenuEditProfil">
-            <div class="centered flex-column">      
-              <div class="optEditProfilImagePdp image"></div>
-            <input type="file" class="inputImgPdp" accept="image/*">
-            </div>
-    
-    
-            <div class="editProfil">
-                <label for="paramDisplayName">Nom d'affichage :  </label>
-                <input type="text" name="displayname" id="paramDisplayName"  value="${dpnUser}">
-                <label for="paramUsername">Nom d'utilisateur : ${nomUser}  </label>
-            
-            </div>
 
-        </div>
-        <label for="paramProfilBio">Bio : </label>
-        <textarea type="text" name="bio" id="paramProfilBio"  value=""></textarea>
-  </div>
+    let fil = `
+         <div class="paramContainer  centered">
+         
+                <div class="paramcontenuEditProfil">
+                    <div class="centered flex-column">      
+                     <img class="optEditProfilImagePdp" src="${user.imageUrl}" alt="Image de Profil">
+                    <input type="file" class="inputImgPdp" accept="image/*">
+                    </div>
+                    <div class="editProfil">
+                        <label for="paramDisplayName">Nom d'affichage :  </label>
+                        <input type="text" name="displayname" id="paramDisplayName"  value="${user.displayName}">
+                        <label for="paramUsername">Nom d'utilisateur : ${user.username}  </label>
+                    
+                    </div>
+        
+                </div>
+                <label for="paramProfilBio">Bio : </label>
+                <textarea type="text" name="bio" id="paramProfilBio"  value=""></textarea>
+          </div>
     </div>
     `
     render(fil)
-
     inputimg = document.querySelector('.inputImgPdp')
-    console.log(inputimg)
-    console.log(inputimg.files)
-    document.querySelector('.sauvegarderEditProfile').addEventListener('click',()=>{
-        updateProfil(dpnUser)
-
-    })
-    inputimg.addEventListener('change', () => {
-        console.log(inputimg)
-        console.log(inputimg.files)
-        imgpdp = inputimg.value
-        console.log(imgpdp)
-        changeProfilImage(imgpdp)
+    let dpn = document.querySelector('#paramDisplayName')
+    dpn.addEventListener('keydown',(e)=>{
+    valideDpn(e,dpn)
+        })
+    inputimg.addEventListener('change',() => {
+        setProfilImage(inputimg.files[0])
     })
 
-
 }
+function valideDpn(clé,dpn){
+    if (clé.key === 'Enter'){
+        if (isNotEmpty(dpn.value) && dpn.value.length > 2) {
+            editDisplayName(dpn.value)
+           dpn.blur()
 
-function updateProfil(dpn) {
-    if (inputimg.files.length > 0) {
-        let file = inputimg.files[0]
-        imgpdp = file
-        console.log(file)
-        setProfilImage(file)
-    }
-
-    if (isNotEmpty(dpn.value) && dpn.value.length > 2) {
-        dpn.blur()
-        dpnUser = dpn.value
-        editDisplayName(dpn.value)
-
-    } else {
-        dpn.value = null
-    }
-
-}
-
-function changeProfilImage(image) {
-    console.log(image);
-
-    // Vérifiez si l'image est nulle ou vide (ajustez selon votre besoin)
-    if (!isNull(image)) {
-
-        // Sélectionnez l'élément avec la classe .optEditProfilImagePdp
-        const profileImageElement = document.querySelector('.optEditProfilImagePdp');
-
-        // Assurez-vous que l'élément existe avant de tenter de le modifier
-        if (profileImageElement) {
-            // Définissez l'image en tant que fond
-            profileImageElement.style.backgroundImage = `url("${image}")`;
-            // Ajoutez d'autres propriétés de style au besoin
-            profileImageElement.style.backgroundSize = 'cover';
-            profileImageElement.style.backgroundPosition = 'center';
-            // ...
-
-            // Mettez à jour la variable imgpdp si nécessaire
-            imgpdp = image;
         }
     }
 }
 
-
 function setProfilImage(file) {
+    console.log('set profil image:',file)
     const formData = new FormData()
     formData.append('profilepic', file)
-
+    console.log(formData)
     const param =
         {
             method: 'POST',
@@ -1001,8 +931,9 @@ function setProfilImage(file) {
 
     fetch(`${baseUrl}api/profilepicture`, param).then(response => response.json())
         .then(data => {
-            console.log(data)
-            updateProfil(dpnUser)
+            getObjectUser().then(response=>{
+                renderEditProfil()
+            })
         })
 
 }
@@ -1022,8 +953,9 @@ async function editDisplayName(dpn) {
         }
     await fetch(`${baseUrl}api/profile/edit`, param).then(response => response.json())
         .then(data => {
-            console.log(data)
-        })
+            getObjectUser()}
+            )
+
 
 }
 
