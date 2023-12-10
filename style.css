@@ -43,15 +43,7 @@ background-size: cover;
     background-position: center;
     background-image: url("image/vide.png");
 }
-.containerFond {
-    width: 86%;
-    bottom: 0%;
-    right: 0%;
-    position: absolute;
-    height: 100%;
-    /* Add your background pattern here */
 
-}
 
 .containerFddddond::before {
     content: '';
@@ -67,7 +59,108 @@ background-size: cover;
 }
 
 
-/*================================anim ====================*/
+/*================================Page====================*/
+.containerFond {
+    width: 100%;
+    bottom: 0%;
+    right: 0%;
+    position: absolute;
+    height: 100%;
+    /* Add your background pattern here */
+
+}
+.menuMobile > .containerFond{
+    height: 92vh;
+    top: 0%;
+}
+.menuMobile >.mobileNavbarContainer{
+    display: flex !important;
+}
+.loginformPage > .containerFond{
+    height: 100%;
+}
+.pageFilDeDiscussion >.containerFond{
+    height: 100%;
+    width: 86%;
+}
+.pageFilDeDiscussion >.navbarInterface{
+    display: block !important;
+}
+@media only screen and (max-width: 1048px) {
+    .menuMobile > .containerFond{
+        height: 95vh;
+        top: 0%;
+    }
+    .menuMobile >.mobileNavbarContainer{
+        display: flex !important;
+    }
+    .loginformPage > .containerFond{
+        height: 100%;
+    }
+    .pageFilDeDiscussion >.containerFond{
+width: 100%;
+        height: 90%;
+    }
+    .pageFilDeDiscussion >.navbarInterface{
+        display: block !important;
+    }
+}
+
+/*================================MENU DU BAS MODBILE ====================*/
+.mobileNavbarRaccourcis,.mobileNavbarContainer{
+    background-color: white;
+    position: absolute;
+   box-shadow: 0px -11px 11px 2px lightgrey  ;
+}
+.mobileNavbarContainer{
+    bottom: 0%;
+    display: none;
+    left: 0%;
+    flex-direction: row;
+    z-index: 1;
+    justify-content: center;
+    align-items: center;
+    height: 8vh;
+    width: 100vw;
+    border-radius: 35px 35px 0px 0px ;
+}
+.mobileNavbarRaccourcis{
+    height: 79px;
+    width: 81px;
+    border-radius: 50%;
+    bottom: 3vh;
+    background-image: url("image/novalogo.png");
+    background-size: 160%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.mobileNavbarIcon {
+
+    height: 70%;
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.mobileNavbarIcon > div{
+    font-size: 2em;
+}
+.mobileNavbarIcon > div > .bi {
+    color: var(--joyeux);
+
+}
+.mobileNavbarImagePdp{
+    border: var(--joyeux) 2px solid;
+    border-radius: 50%;
+}
+@media only screen and (max-width: 840px) {
+    .mobileNavbarContainer{
+        display: flex;
+    }
+}
+
+
+    /*================================anim ====================*/
 .logo{
     width: 200px;
     height: 200px;
@@ -108,6 +201,7 @@ background-size: cover;
 }
 
 /*================================loginform ====================*/
+
 .loginform {
     width: 50%;
     height: 90vh;
@@ -480,7 +574,7 @@ background-size: cover;
     width: 100%;
 overflow-x: hidden;
     padding: 26px 15px 20px 20px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .postMessage {
@@ -580,7 +674,7 @@ overflow-x: hidden;
         padding: 0%;
         width: 100%;
 
-        height: 90%;
+        height: 100%;
         /* Add your background pattern here */
 
     }

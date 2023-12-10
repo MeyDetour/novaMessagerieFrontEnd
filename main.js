@@ -19,15 +19,17 @@ let user = null //OBJECT USER ( id , username,displayName,image(imageName),image
 
 
 let inputimg = null
-let nav = ""
+
 let error2 = ""
 let error = ""
+let page = document.querySelector('.fond')
 //checker les cookies du navigateur et le rempalcer
 //formulaire acceptation coockie
 let content = document.querySelector('.containerFond')
 const baseUrl = "https://b1messenger.imatrythis.com/"
-
-let dpnUser = "" // display name user
+let mobileRetourDiscussion = document.querySelector('.navbarInterface')
+let mobilenavbar = document.querySelector('.mobileNavbarContainer')
+let home = null
 let homemresponsive = null
 let listemessage = ""
 let croix = null
@@ -50,10 +52,10 @@ function run() {
     } else {
         getMessages().then(response => {
             listemessage = response
-            renderMessage(response)
             renderInterface()
+
             addActionEvent()
-            scrollY()
+
         })
     }
 
@@ -87,6 +89,7 @@ function isEmptyList(liste) {
 
 // -----------------------------------------Formulaire
 function renderForm() {
+    addPageClass('loginformPage')
     let form = `
     <div class="loginform">
         <p class="heading">Login</p>
@@ -142,6 +145,7 @@ function renderForm() {
 // -----------------------------------------Register
 
 function renderSignup() {
+    addPageClass('loginformPage')
     let form = `
         <div class="card" id="signupForm">
         <h4 class="title">Sign up!</h4>
@@ -251,7 +255,7 @@ async function getToken(name, mdpasse) {
                 // setCookie("token", token, 30);
                 freshener = data.freshener
                 getObjectUser().then(response=>{
-                    console.log(user)
+
                     if(isNull(user.displayName)){
                         editDisplayName(user.username)
                     }
@@ -276,7 +280,7 @@ async function getObjectUser() {
     return await fetch(`${baseUrl}api/whoami`, param)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+
             user = data
         })
 }
@@ -290,39 +294,63 @@ function renderVide() {
     render(temp)
 }
 
-function renderInterface() {
-    let navbar = document.querySelector('.navbarInterface')
-    if (navbar.classList.contains('d-none')) {
-        navbar.classList.remove('d-none')
+function addPageClass(classe){
+    if (page.classList.contains('loginformPage')){
+        page.classList.toggle('loginformPage')
     }
+    if (page.classList.contains('menuMobile')){
+        page.classList.toggle('menuMobile')
+    }
+
+    if (page.classList.contains('pageFilDeDiscussion')){
+        page.classList.toggle('pageFilDeDiscussion')
+    }
+    page.classList.add(classe)
+}
+
+function renderInterface() {
+
+ addPageClass('pageFilDeDiscussion')
     getObjectUser().then(response=>{
-        navbar.innerHTML =
+        mobileRetourDiscussion.innerHTML =
             `
-            <div class="d-flex flex-row  justify-content-between">
-                <a href="#" class="btn-opt-navbar joyeux burgernavbar "><i class=" bi bi-list"></i></a>
-                <a href="#" class="btn-opt-navbar white "><i class="d-none fermermenunavbar bi bi-x-lg"></i></a>
-                <img src="image/logo.png" alt="logoNova" class="  imagelogomenuNavbar"></div>
-            </div>
-            <div class="navbar__item   ">
-                <img src="image/logo.png" alt="logoNova" class="imagelogoNavbar"></div>
-            <div class=" convPrivéListe">
-                <a href="#" class="btn-opt-navbar"></a>
-            </div>
-            
-            <div class="navbar__item">
-         
-                <div class="">
-                    <img src="${user.thumbImageUrl}" alt="Photo de profil" class="imagepdpContainer image" id="profileImage">
-                    <div class="popoverOptProfil d-none centered" id="dropdownOptions">
-                        <span class="popoverOption">Statut</span>
-                        <span class="popoverOption" onclick="renderEditProfil()">Edit Profil</span>
-                        <span class="">Deconnexion</span>
-                    </div>
-                </div>
-                <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
-            
-            </div>`}
+<div class="d-flex flex-row  justify-content-between">
+
+<div class="navbar__item   ">
+    <img src="image/logo.png" alt="logoNova" class="imagelogoNavbar" onclick="run()"></div>
+  <div class="mobileRetour" fs-5 ">
+  <div onclick="renderResponsiveMenu()">
+    <i class="bi bi-arrow-left"></i>
+</div>
+     <img src="image/logo.png" alt="logoNova" class="imagelogomenuNavbar" onclick="run()"></div>
+</div>
+</div>
+<div class=" convPrivéListe">
+    <a href="#" class="btn-opt-navbar"></a>
+</div>
+
+<div class="navbar__item">
+
+    <div class="dropdown">
+          <img src="${user.thumbImageUrl}" alt="Photo de profil" class="imagepdpContainer image" id="profileImage">
+     <div class="popoverOptProfil d-none centered" id="dropdownOptions">
+            <span class="popoverOption">Statut</span>
+            <span class="popoverOption" onclick="renderEditProfil()">Edit Profil</span>
+            <span class="">Deconnexion</span>
+        </div>
+    </div>
+    <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
+
+</div>
+
+`}
     ).then(a=>{
+        renderMessage()
+        scrollY()
+        croix = document.querySelector('.fermermenunavbar')
+        menuBurger = document.querySelector('.burgernavbar')
+        home = document.querySelector('.imagelogoNavbar')
+        homemresponsive = document.querySelector('.imagelogomenuNavbar')
         document.querySelector('#profileImage').addEventListener('click', () => {
             document.querySelector('#dropdownOptions').classList.toggle('d-none')
 
@@ -330,33 +358,25 @@ function renderInterface() {
 
     })
 
-
-
-
-
-
 }
 
 function renderResponsiveMenu() {
-    let cont = `
-        <div class="menunavbar">
-        <div class="asidemenu centered"> 
-            <div class="navbar__item-menu   ">
-            
-                <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-house-door"></i></a>
-          
-                <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-chat-left"></i></a>
-            </div>
-                <div class="navbar__item-menu">
-                    <a href="#" class="btn-opt-navbar"><i class="iconeNAvbar bi bi-gear"></i></a>
-                     <div class="imagepdpContainer2 image"></div>  
-                    </div>  
-             </div>
-               <div class=" convPrivéListe2">
-                <a href="#" class="btn-opt-navbar"></a>
-            </div>
-        </div>`
-    render(cont)
+addPageClass('menuMobile')
+    mobilenavbar.innerHTML = `
+
+    <div class="mobileNavbarRaccourcis"></div>
+    <div class="mobileNavbarIcon">
+        <div onclick="run()">
+            <i class="bi bi-chat-dots"></i>
+        </div>
+        <div onclick="renderEditProfil()">
+            <img src="${user.thumbImageUrl}" alt="Image de profil" width="45px" height="45px" class="mobileNavbarImagePdp">
+        </div>
+
+    </div>
+`
+    render('')
+
 }
 
 function renderCoockie() {
@@ -422,7 +442,7 @@ function checkCookie() {
 
 // -----------------------------------------Affichage messaage
 
-function renderMessage(listeMessage) {
+function renderMessage() {
     let fil = `
       <div class="filDiscussion">
         <div class="messages">
@@ -436,8 +456,8 @@ function renderMessage(listeMessage) {
     `
     render(fil)
 
-    for (let i = 0; i < listeMessage.length; i++) {
-        let message = listeMessage[i]
+    for (let i = 0; i < listemessage.length; i++) {
+        let message = listemessage[i]
         logiqueMessage(message, i)
         addActions(message)
     }
@@ -635,9 +655,7 @@ function modifierInnerMessage(e, textarea, methode, id) {
 
 function addActions(message) {
     let id = message.id
-    //   console.log(message.reactions,message.responses)
-    //  console.log(message.reactions.length,message.responses.length)
-    let containermessage = document.querySelector(`.containerMessage${id}`)
+       let containermessage = document.querySelector(`.containerMessage${id}`)
 
     if (message.author.username === user.username) {
         containermessage.classList.add('rightMessage')
@@ -657,11 +675,7 @@ function addActions(message) {
 }
 
 function addActionEvent() {
-    croix = document.querySelector('.fermermenunavbar')
-    homemresponsive = document.querySelector('.imagelogomenuNavbar')
-    let home = document.querySelector('.imagelogoNavbar')
 
-    menuBurger = document.querySelector('.burgernavbar')
     const bouttons = document.querySelectorAll('.sendBtn, .refreshBtn');
     const messageAEnvoyer = document.querySelector('.msgInput')
     let poubelles = document.querySelectorAll('.poubelle');
@@ -669,27 +683,16 @@ function addActionEvent() {
     let reactions = document.querySelectorAll('.reaction');
     let repondres = document.querySelectorAll('.repondre');
 
-    homemresponsive.addEventListener('click', () => {
-        run()
-    })
-    home.addEventListener('click', () => {
-        run()
-    })
+
     if (window.innerWidth > 1048) {
         messageAEnvoyer.focus()
     }
 
     window.addEventListener('resize', () => {
-
         run()
     })
-    croix.addEventListener('click', () => {
-        fermermenu()
-    })
-    menuBurger.addEventListener('click', () => {
 
-        ouvrirmenu()
-    })
+
 //let tagsName = document.querySelectorAll('.tag')
     poubelles.forEach((poubelle) => {
 
@@ -845,48 +848,27 @@ async function logout() {
 
 }
 
-// -----------------------------------------MENU menu navbar
-function fermermenu() {
-
-    nav = document.querySelector('.navbarInterface2')
-    switchNavbarInterface()
-    menuBurger.style.display = 'block'
-    homemresponsive.style.display = 'block'
-    run()
-}
-
-function ouvrirmenu() {
-    nav = document.querySelector('.navbarInterface')
-    renderResponsiveMenu()
-    switchNavbarInterface()
-    menuBurger.style.display = 'none'
-    homemresponsive.style.display = 'none'
-}
-
-function switchNavbarInterface() {
-    nav.classList.toggle('navbarInterface')
-    nav.classList.toggle('navbarInterface2')
-    croix.classList.toggle('d-none')
-}
-
 // -----------------------------------------Edit profil
 function renderEditProfil() {
 
     let fil = `
          <div class="paramContainer  centered">
-         
+        
                 <div class="paramcontenuEditProfil">
                     <div class="centered flex-column">      
                      <img class="optEditProfilImagePdp" src="${user.imageUrl}" alt="Image de Profil">
                     <input type="file" class="inputImgPdp" accept="image/*">
-                    </div>
+                    </div>  
+                    <div class="d-flex flex-column gap-5">
+                    
                     <div class="editProfil">
                         <label for="paramDisplayName">Nom d'affichage :  </label>
                         <input type="text" name="displayname" id="paramDisplayName"  value="${user.displayName}">
-                        <label for="paramUsername">Nom d'utilisateur : ${user.username}  </label>
-                    
                     </div>
-        
+                  <label for="paramUsername">Nom d'utilisateur : ${user.username}  </label>
+                   
+</div>
+                   
                 </div>
                 <label for="paramProfilBio">Bio : </label>
                 <textarea type="text" name="bio" id="paramProfilBio"  value=""></textarea>
@@ -915,10 +897,10 @@ function valideDpn(clé,dpn){
 }
 
 function setProfilImage(file) {
-    console.log('set profil image:',file)
+
     const formData = new FormData()
     formData.append('profilepic', file)
-    console.log(formData)
+
     const param =
         {
             method: 'POST',
